@@ -3,7 +3,7 @@ import { cors } from '../Support';
 import { cleanUrl, getUrlParams } from '../Util';
 import Request from '../Request';
 
-export var Service = Evented.extend({
+export const Service = Evented.extend({
 
   options: {
     proxy: false,
@@ -57,7 +57,7 @@ export var Service = Evented.extend({
       method: method
     }, true);
 
-    var wrappedCallback = this._createServiceCallback(method, path, params, callback, context);
+    const wrappedCallback = this._createServiceCallback(method, path, params, callback, context);
 
     if (this.options.token) {
       params.token = this.options.token;
@@ -68,7 +68,7 @@ export var Service = Evented.extend({
     if (this._authenticating) {
       this._requestQueue.push([method, path, params, callback, context]);
     } else {
-      var url = (this.options.proxy) ? this.options.proxy + '?' + this.options.url + path : this.options.url + path;
+      const url = (this.options.proxy) ? this.options.proxy + '?' + this.options.url + path : this.options.url + path;
 
       if ((method === 'get' || method === 'request') && !this.options.useCors) {
         return Request.get.JSONP(url, params, wrappedCallback, context);
@@ -122,9 +122,9 @@ export var Service = Evented.extend({
   },
 
   _runQueue: function () {
-    for (var i = this._requestQueue.length - 1; i >= 0; i--) {
-      var request = this._requestQueue[i];
-      var method = request.shift();
+    for (let i = this._requestQueue.length - 1; i >= 0; i--) {
+      const request = this._requestQueue[i];
+      const method = request.shift();
       this[method].apply(this, request);
     }
     this._requestQueue = [];

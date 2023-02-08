@@ -2,7 +2,7 @@ import { CRS, DomEvent, TileLayer, Util } from 'leaflet';
 import { warn, getUrlParams, setEsriAttribution, removeEsriAttribution } from '../Util';
 import mapService from '../Services/MapService';
 
-export var TiledMapLayer = TileLayer.extend({
+export const TiledMapLayer = TileLayer.extend({
   options: {
     zoomOffsetAllowance: 0.1,
     errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEABAMAAACuXLVVAAAAA1BMVEUzNDVszlHHAAAAAXRSTlMAQObYZgAAAAlwSFlzAAAAAAAAAAAB6mUWpAAAADZJREFUeJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7waBAAABw08RwAAAAABJRU5ErkJggg=='
@@ -51,7 +51,7 @@ export var TiledMapLayer = TileLayer.extend({
     this.service = mapService(options);
     this.service.addEventParent(this);
 
-    var arcgisonline = new RegExp(/tiles.arcgis(online)?\.com/g);
+    const arcgisonline = /tiles.arcgis(online)?\.com/g;
     if (arcgisonline.test(options.url)) {
       this.tileUrl = this.tileUrl.replace('://tiles', '://tiles{s}');
       options.subdomains = ['1', '2', '3', '4'];
@@ -66,7 +66,7 @@ export var TiledMapLayer = TileLayer.extend({
   },
 
   getTileUrl: function (tilePoint) {
-    var zoom = this._getZoomForUrl();
+    const zoom = this._getZoomForUrl();
 
     return Util.template(this.tileUrl, Util.extend({
       s: this._getSubdomain(tilePoint),
@@ -78,7 +78,7 @@ export var TiledMapLayer = TileLayer.extend({
   },
 
   createTile: function (coords, done) {
-    var tile = document.createElement('img');
+    const tile = document.createElement('img');
 
     DomEvent.on(tile, 'load', Util.bind(this._tileOnLoad, this, done, tile));
     DomEvent.on(tile, 'error', Util.bind(this._tileOnError, this, done, tile));
@@ -113,7 +113,7 @@ export var TiledMapLayer = TileLayer.extend({
     if (!this._lodMap) {
       this.metadata(function (error, metadata) {
         if (!error && metadata.spatialReference) {
-          var sr = metadata.spatialReference.latestWkid || metadata.spatialReference.wkid;
+          const sr = metadata.spatialReference.latestWkid || metadata.spatialReference.wkid;
           // display the copyright text from the service using leaflet's attribution control
           if (!this.options.attribution && map.attributionControl && metadata.copyrightText) {
             this.options.attribution = metadata.copyrightText;
@@ -124,13 +124,13 @@ export var TiledMapLayer = TileLayer.extend({
           if (map.options.crs === CRS.EPSG3857 && (sr === 102100 || sr === 3857)) {
             this._lodMap = {};
             // create the zoom level data
-            var arcgisLODs = metadata.tileInfo.lods;
-            var correctResolutions = TiledMapLayer.MercatorZoomLevels;
+            const arcgisLODs = metadata.tileInfo.lods;
+            const correctResolutions = TiledMapLayer.MercatorZoomLevels;
 
-            for (var i = 0; i < arcgisLODs.length; i++) {
-              var arcgisLOD = arcgisLODs[i];
-              for (var ci in correctResolutions) {
-                var correctRes = correctResolutions[ci];
+            for (let i = 0; i < arcgisLODs.length; i++) {
+              const arcgisLOD = arcgisLODs[i];
+              for (const ci in correctResolutions) {
+                const correctRes = correctResolutions[ci];
 
                 if (this._withinPercentage(arcgisLOD.resolution, correctRes, this.options.zoomOffsetAllowance)) {
                   this._lodMap[ci] = arcgisLOD.level;
@@ -177,7 +177,7 @@ export var TiledMapLayer = TileLayer.extend({
   },
 
   authenticate: function (token) {
-    var tokenQs = '?token=' + token;
+    const tokenQs = '?token=' + token;
     this.tileUrl = (this.options.token) ? this.tileUrl.replace(/\?token=(.+)/g, tokenQs) : this.tileUrl + tokenQs;
     this.options.token = token;
     this.service.authenticate(token);
@@ -185,7 +185,7 @@ export var TiledMapLayer = TileLayer.extend({
   },
 
   _withinPercentage: function (a, b, percentage) {
-    var diff = Math.abs((a / b) - 1);
+    const diff = Math.abs((a / b) - 1);
     return diff < percentage;
   }
 });

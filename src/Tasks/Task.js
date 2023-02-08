@@ -3,7 +3,7 @@ import { cors } from '../Support';
 import { cleanUrl, getUrlParams } from '../Util';
 import Request from '../Request';
 
-export var Task = Class.extend({
+export const Task = Class.extend({
 
   options: {
     proxy: false,
@@ -33,8 +33,8 @@ export var Task = Class.extend({
 
     // generate setter methods based on the setters object implimented a child class
     if (this.setters) {
-      for (var setter in this.setters) {
-        var param = this.setters[setter];
+      for (const setter in this.setters) {
+        const param = this.setters[setter];
         this[setter] = this.generateSetter(param, this);
       }
     }
@@ -72,7 +72,7 @@ export var Task = Class.extend({
   },
 
   _request: function (method, path, params, callback, context) {
-    var url = (this.options.proxy) ? this.options.proxy + '?' + this.options.url + path : this.options.url + path;
+    const url = (this.options.proxy) ? this.options.proxy + '?' + this.options.url + path : this.options.url + path;
 
     if ((method === 'get' || method === 'request') && !this.options.useCors) {
       return Request.get.JSONP(url, params, callback, context);

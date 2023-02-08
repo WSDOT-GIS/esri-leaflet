@@ -1,9 +1,9 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 describe('L.esri.IdentifyFeatures', function () {
   function createMap () {
     // create container
-    var container = document.createElement('div');
+    const container = document.createElement('div');
 
     // give container a width/height
     container.setAttribute('style', 'width:500px; height: 500px;');
@@ -14,29 +14,29 @@ describe('L.esri.IdentifyFeatures', function () {
     return L.map(container).setView([45.51, -122.66], 16);
   }
 
-  var server;
-  var task;
+  let server;
+  let task;
 
   // create map
-  var map = createMap();
+  const map = createMap();
 
-  var latlng = map.getCenter();
-  var rawLatlng = [45.51, -122.66];
+  const latlng = map.getCenter();
+  const rawLatlng = [45.51, -122.66];
 
-  var bounds = L.latLngBounds([[45.5, -122.66], [45.51, -122.65]]);
+  const bounds = L.latLngBounds([[45.5, -122.66], [45.51, -122.65]]);
 
-  var rawGeoJsonPolygon = {
+  const rawGeoJsonPolygon = {
     type: 'Polygon',
     coordinates: [[
       [-97, 39], [-97, 41], [-94, 41], [-94, 39], [-97, 39]
     ]]
   };
 
-  var geoJsonPolygon = L.geoJSON(rawGeoJsonPolygon);
+  const geoJsonPolygon = L.geoJSON(rawGeoJsonPolygon);
 
-  var mapServiceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockMapService/MapServer/';
+  const mapServiceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockMapService/MapServer/';
 
-  var sampleResponse = {
+  const sampleResponse = {
     results: [
       {
         layerId: 0,
@@ -60,7 +60,7 @@ describe('L.esri.IdentifyFeatures', function () {
   };
 
   // use 'objectid' instead of 'OBJECTID' to trap irregular casing
-  var sampleFeatureCollection = {
+  const sampleFeatureCollection = {
     type: 'FeatureCollection',
     features: [
       {
@@ -89,7 +89,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features', function (done) {
-    var request = task.run(function (error, featureCollection, raw) {
+    const request = task.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -109,7 +109,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features with a layer definition', function (done) {
-    var request = task.layerDef(0, 'NAME=Oregon').run(function (error, featureCollection, raw) {
+    const request = task.layerDef(0, 'NAME=Oregon').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -121,7 +121,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features with 2 layer definitions', function (done) {
-    var request = task.layerDef(0, 'NAME=Oregon').layerDef(1, 'NAME=Multnomah').run(function (error, featureCollection, raw) {
+    const request = task.layerDef(0, 'NAME=Oregon').layerDef(1, 'NAME=Multnomah').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -133,10 +133,10 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features in a given time range', function (done) {
-    var start = new Date('January 1 2013 GMT-0800');
-    var end = new Date('January 1 2014 GMT-0800');
+    const start = new Date('January 1 2013 GMT-0800');
+    const end = new Date('January 1 2014 GMT-0800');
 
-    var request = task.between(start, end).run(function (error, featureCollection, raw) {
+    const request = task.between(start, end).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -148,7 +148,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should restrict identification to specific layers', function (done) {
-    var request = task.layers('top').run(function (error, featureCollection, raw) {
+    const request = task.layers('top').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -158,7 +158,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features and limit geometries to a given precision', function (done) {
-    var request = task.precision(4).run(function (error, featureCollection, raw) {
+    const request = task.precision(4).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -170,7 +170,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features and simplify geometries', function (done) {
-    var request = task.simplify(map, 0.5).run(function (error, featureCollection, raw) {
+    const request = task.simplify(map, 0.5).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -182,7 +182,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features with a token', function (done) {
-    var request = task.token('foo').run(function (error, featureCollection, raw) {
+    const request = task.token('foo').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -194,7 +194,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features within a certain pixel tolerance', function (done) {
-    var request = task.tolerance(4).run(function (error, featureCollection, raw) {
+    const request = task.tolerance(4).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -206,7 +206,7 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should fetch unformatted results from 10.5+', function (done) {
-    var request = task.format(false).run(function (error, featureCollection, raw) {
+    const request = task.format(false).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -218,9 +218,9 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should use a service to execute the request', function (done) {
-    var service = L.esri.mapService({ url: mapServiceUrl });
+    const service = L.esri.mapService({ url: mapServiceUrl });
 
-    var request = service.identify().on(map).at(latlng).run(function (error, featureCollection, raw) {
+    const request = service.identify().on(map).at(latlng).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -240,9 +240,9 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should use a service to execute the request with simple LatLng', function (done) {
-    var service = L.esri.mapService({ url: mapServiceUrl });
+    const service = L.esri.mapService({ url: mapServiceUrl });
 
-    var request = service.identify().on(map).at(rawLatlng).run(function (error, featureCollection, raw) {
+    const request = service.identify().on(map).at(rawLatlng).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -262,9 +262,9 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should return layerId of features in response', function (done) {
-    var service = L.esri.mapService({ url: mapServiceUrl });
+    const service = L.esri.mapService({ url: mapServiceUrl });
 
-    var request = service.identify().on(map).at(rawLatlng).run(function (error, featureCollection, raw) {
+    const request = service.identify().on(map).at(rawLatlng).run(function (error, featureCollection, raw) {
       expect(featureCollection.features[0].layerId).to.deep.equal(0);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -274,9 +274,9 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features with an input extent', function (done) {
-    var extentTask = L.esri.identifyFeatures({ url: mapServiceUrl }).on(map).at(bounds);
+    const extentTask = L.esri.identifyFeatures({ url: mapServiceUrl }).on(map).at(bounds);
 
-    var request = extentTask.run(function (error, featureCollection, raw) {
+    const request = extentTask.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -290,9 +290,9 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features with raw geojson input', function (done) {
-    var rawTask = L.esri.identifyFeatures({ url: mapServiceUrl }).on(map).at(rawGeoJsonPolygon);
+    const rawTask = L.esri.identifyFeatures({ url: mapServiceUrl }).on(map).at(rawGeoJsonPolygon);
 
-    var request = rawTask.run(function (error, featureCollection, raw) {
+    const request = rawTask.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -306,9 +306,9 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features with geojson input', function (done) {
-    var polygonTask = L.esri.identifyFeatures({ url: mapServiceUrl }).on(map).at(geoJsonPolygon);
+    const polygonTask = L.esri.identifyFeatures({ url: mapServiceUrl }).on(map).at(geoJsonPolygon);
 
-    var request = polygonTask.run(function (error, featureCollection, raw) {
+    const request = polygonTask.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -322,14 +322,14 @@ describe('L.esri.IdentifyFeatures', function () {
   });
 
   it('should identify features passing through arbitrary request parameters', function (done) {
-    var polygonTask = L.esri.identifyFeatures({
+    const polygonTask = L.esri.identifyFeatures({
       url: mapServiceUrl,
       requestParams: {
         foo: 'bar'
       }
     }).on(map).at(geoJsonPolygon);
 
-    var request = polygonTask.run(function (error, featureCollection, raw) {
+    const request = polygonTask.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -343,4 +343,4 @@ describe('L.esri.IdentifyFeatures', function () {
     request.respond(200, { 'Content-Type': 'text/plain; charset=utf-8' }, JSON.stringify(sampleResponse));
   });
 });
-/* eslint-enable handle-callback-err */
+/* eslint-enable node/handle-callback-err */

@@ -1,13 +1,13 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 describe('L.esri.Find', function () {
-  var server;
-  var task;
+  let server;
+  let task;
 
   // create map
-  var mapServiceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockMapService/MapServer/';
+  const mapServiceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockMapService/MapServer/';
 
-  var sampleResponse = {
+  const sampleResponse = {
     results: [
       {
         layerId: 0,
@@ -30,7 +30,7 @@ describe('L.esri.Find', function () {
     ]
   };
 
-  var sampleResponseWithSearchFields = {
+  const sampleResponseWithSearchFields = {
     results: [
       {
         layerId: 0,
@@ -54,7 +54,7 @@ describe('L.esri.Find', function () {
     ]
   };
 
-  var sampleResponseWithoutGeometry = {
+  const sampleResponseWithoutGeometry = {
     results: [
       {
         layerId: 0,
@@ -69,7 +69,7 @@ describe('L.esri.Find', function () {
     ]
   };
 
-  var sampleFeatureCollectionWithoutGeometry = {
+  const sampleFeatureCollectionWithoutGeometry = {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
@@ -82,7 +82,7 @@ describe('L.esri.Find', function () {
     }]
   };
 
-  var sampleFeatureCollection = {
+  const sampleFeatureCollection = {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
@@ -110,7 +110,7 @@ describe('L.esri.Find', function () {
   it('should find features with provided layer id and search text', function (done) {
     server.respondWith('GET', mapServiceUrl + 'find?sr=4326&contains=true&returnGeometry=true&returnZ=true&returnM=false&layers=0&searchText=Site&f=json', JSON.stringify(sampleResponse));
 
-    var request = task.layers('0').text('Site').run(function (error, featureCollection, raw) {
+    const request = task.layers('0').text('Site').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -194,11 +194,11 @@ describe('L.esri.Find', function () {
   });
 
   it('should use a service to execute the find task', function (done) {
-    var service = L.esri.mapService({ url: mapServiceUrl });
+    const service = L.esri.mapService({ url: mapServiceUrl });
 
     server.respondWith('GET', mapServiceUrl + 'find?sr=4326&contains=true&returnGeometry=true&returnZ=true&returnM=false&layers=0&searchText=Site&f=json', JSON.stringify(sampleResponse));
 
-    var request = service.find().layers('0').text('Site').run(function (error, featureCollection, raw) {
+    const request = service.find().layers('0').text('Site').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -210,12 +210,12 @@ describe('L.esri.Find', function () {
   });
 
   it('should use JSONP to execute without a service', function (done) {
-    var myTask = L.esri.find({
+    const myTask = L.esri.find({
       url: mapServiceUrl,
       useCors: false
     });
 
-    var request = myTask.layers('0').text('Site').run(function (error, featureCollection, raw) {
+    const request = myTask.layers('0').text('Site').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -225,7 +225,7 @@ describe('L.esri.Find', function () {
   });
 
   it('should pass through arbitrary request parameters', function (done) {
-    var myTask = L.esri.find({
+    const myTask = L.esri.find({
       url: mapServiceUrl,
       requestParams: {
         foo: 'bar'
@@ -234,7 +234,7 @@ describe('L.esri.Find', function () {
 
     server.respondWith('GET', mapServiceUrl + 'find?sr=4326&contains=true&returnGeometry=true&returnZ=true&returnM=false&layers=0&searchText=Site&foo=bar&f=json', JSON.stringify(sampleResponse));
 
-    var request = myTask.layers('0').text('Site').run(function (error, featureCollection, raw) {
+    const request = myTask.layers('0').text('Site').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleResponse);
       done();
@@ -245,4 +245,4 @@ describe('L.esri.Find', function () {
     server.respond();
   });
 });
-/* eslint-enable handle-callback-err */
+/* eslint-enable node/handle-callback-err */

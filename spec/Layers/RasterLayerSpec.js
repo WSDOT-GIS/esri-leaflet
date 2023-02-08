@@ -1,15 +1,15 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 /* eslint-disable no-unused-expressions */
 describe('L.esri.RasterLayer', function () {
   it('should not error when calling setOpacity when _currentImage is null', function () {
-    var layer = new L.esri.RasterLayer();
+    const layer = new L.esri.RasterLayer();
     layer._currentImage = null;
     expect(function () { layer.setOpacity(0.5); }).to.not.throw();
   });
 
   // Extend 'abstract' RasterLayer object and implement functionality required for tests
-  var TestRasterLayer = L.esri.RasterLayer.extend({
+  const TestRasterLayer = L.esri.RasterLayer.extend({
     initialize: function (options) {
       L.setOptions(this, options);
       this.service = {
@@ -27,7 +27,7 @@ describe('L.esri.RasterLayer', function () {
   });
 
   describe('_renderImage', function () {
-    var div, map, layer;
+    let div, map, layer;
 
     // Set up things before each test run
     beforeEach(function () {
@@ -53,12 +53,12 @@ describe('L.esri.RasterLayer', function () {
 
     describe('when error is raised when loading the ImageOverlay', function () {
       it('should raise an error', function () {
-        var errorCallback = sinon.spy();
+        const errorCallback = sinon.spy();
         layer.on('error', errorCallback);
 
         layer.addTo(map);
 
-        var imageOverlay = map.addLayer.getCall(1).args[0]; // Get the ImageOverlay which is being added to the map
+        const imageOverlay = map.addLayer.getCall(1).args[0]; // Get the ImageOverlay which is being added to the map
         imageOverlay.fire('error'); // And fire the error event on the layer
 
         expect(errorCallback.called).to.be.true;
@@ -67,7 +67,7 @@ describe('L.esri.RasterLayer', function () {
       it('should remove the ImageOverlay which is being loaded', function () {
         layer.addTo(map);
 
-        var imageOverlay = map.addLayer.getCall(1).args[0];
+        const imageOverlay = map.addLayer.getCall(1).args[0];
         imageOverlay.fire('error');
 
         expect(map.removeLayer.calledWith(imageOverlay)).to.be.true;
@@ -76,7 +76,7 @@ describe('L.esri.RasterLayer', function () {
       it('should stop listening for the load event', function () {
         layer.addTo(map);
 
-        var imageOverlay = map.addLayer.getCall(1).args[0];
+        const imageOverlay = map.addLayer.getCall(1).args[0];
         imageOverlay.off = sinon.spy(imageOverlay.off);
         imageOverlay.fire('error');
 
@@ -87,7 +87,7 @@ describe('L.esri.RasterLayer', function () {
     describe('when the ImageOverlay has loaded', function () {
       it('should stop listening for the error event', function () {
         layer.addTo(map);
-        var imageOverlay = map.addLayer.getCall(1).args[0];
+        const imageOverlay = map.addLayer.getCall(1).args[0];
         imageOverlay.off = sinon.spy(imageOverlay.off);
         imageOverlay.fire('load');
 
@@ -95,9 +95,9 @@ describe('L.esri.RasterLayer', function () {
       });
 
       it('should send credentials', function () {
-        var layer = new TestRasterLayer({ withCredentials: true });
+        const layer = new TestRasterLayer({ withCredentials: true });
         layer.addTo(map);
-        var imageOverlay = map.addLayer.getCall(1).args[0];
+        const imageOverlay = map.addLayer.getCall(1).args[0];
         expect(imageOverlay._image.crossOrigin).to.be.equal('use-credentials');
       });
     });

@@ -2,7 +2,7 @@ import { latLng } from 'leaflet';
 import { Identify } from './Identify';
 import { responseToFeatureCollection } from '../Util';
 
-export var IdentifyImage = Identify.extend({
+export const IdentifyImage = Identify.extend({
   setters: {
     setMosaicRule: 'mosaicRule',
     setRenderingRule: 'renderingRule',
@@ -50,10 +50,10 @@ export var IdentifyImage = Identify.extend({
   // populate catalog items (if any)
   // merging in any catalogItemVisibilities as a propery of each feature
   _responseToGeoJSON: function (response) {
-    var location = response.location;
-    var catalogItems = response.catalogItems;
-    var catalogItemVisibilities = response.catalogItemVisibilities;
-    var geoJSON = {
+    const location = response.location;
+    const catalogItems = response.catalogItems;
+    const catalogItemVisibilities = response.catalogItemVisibilities;
+    const geoJSON = {
       pixel: {
         type: 'Feature',
         geometry: {
@@ -82,7 +82,7 @@ export var IdentifyImage = Identify.extend({
     if (catalogItems && catalogItems.features) {
       geoJSON.catalogItems = responseToFeatureCollection(catalogItems);
       if (catalogItemVisibilities && catalogItemVisibilities.length === geoJSON.catalogItems.features.length) {
-        for (var i = catalogItemVisibilities.length - 1; i >= 0; i--) {
+        for (let i = catalogItemVisibilities.length - 1; i >= 0; i--) {
           geoJSON.catalogItems.features[i].properties.catalogItemVisibility = catalogItemVisibilities[i];
         }
       }

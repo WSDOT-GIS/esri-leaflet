@@ -9,7 +9,7 @@ import {
 import { FeatureGrid } from './FeatureGrid';
 import BinarySearchIndex from 'tiny-binary-search';
 
-export var FeatureManager = FeatureGrid.extend({
+export const FeatureManager = FeatureGrid.extend({
   /**
    * Options
    */
@@ -42,8 +42,8 @@ export var FeatureManager = FeatureGrid.extend({
 
     // use case insensitive regex to look for common fieldnames used for indexing
     if (this.options.fields[0] !== '*') {
-      var oidCheck = false;
-      for (var i = 0; i < this.options.fields.length; i++) {
+      let oidCheck = false;
+      for (let i = 0; i < this.options.fields.length; i++) {
         if (this.options.fields[i].match(/^(OBJECTID|FID|OID|ID)$/i)) {
           oidCheck = true;
         }
@@ -77,10 +77,10 @@ export var FeatureManager = FeatureGrid.extend({
 
     this.service.metadata(function (err, metadata) {
       if (!err) {
-        var supportedFormats = metadata.supportedQueryFormats;
+        const supportedFormats = metadata.supportedQueryFormats;
 
         // Check if someone has requested that we don't use geoJSON, even if it's available
-        var forceJsonFormat = false;
+        let forceJsonFormat = false;
         if (
           this.service.options.isModern === false ||
           this.options.fetchAllFeatures
@@ -146,7 +146,7 @@ export var FeatureManager = FeatureGrid.extend({
     // default param
     offset = offset || 0;
 
-    var originalWhere = this.options.where;
+    const originalWhere = this.options.where;
 
     // our first active request fires loading
     if (this._activeRequests === 1) {
@@ -231,13 +231,14 @@ export var FeatureManager = FeatureGrid.extend({
 
   _addFeatures: function (features, coords) {
     // coords is optional - will be false if coming from addFeatures() function
+    let key;
     if (coords) {
-      var key = this._cacheKey(coords);
+      key = this._cacheKey(coords);
       this._cache[key] = this._cache[key] || [];
     }
 
-    for (var i = features.length - 1; i >= 0; i--) {
-      var id = features[i].id;
+    for (let i = features.length - 1; i >= 0; i--) {
+      const id = features[i].id;
 
       if (this._currentSnapshot.indexOf(id) === -1) {
         this._currentSnapshot.push(id);
@@ -255,7 +256,7 @@ export var FeatureManager = FeatureGrid.extend({
   },
 
   _buildQuery: function (bounds, offset) {
-    var query = this.service
+    let query = this.service
       .query()
       .intersects(bounds)
       .where(this.options.where)
@@ -266,7 +267,7 @@ export var FeatureManager = FeatureGrid.extend({
       query = query.offset(offset);
     }
 
-    query.params['resultType'] = 'tile';
+    query.params.resultType = 'tile';
 
     if (this.options.requestParams) {
       Util.extend(query.params, this.options.requestParams);
@@ -294,17 +295,17 @@ export var FeatureManager = FeatureGrid.extend({
   setWhere: function (where, callback, context) {
     this.options.where = where && where.length ? where : '1=1';
 
-    var oldSnapshot = [];
-    var newSnapshot = [];
-    var pendingRequests = 0;
-    var requestError = null;
-    var requestCallback = Util.bind(function (error, featureCollection) {
+    const oldSnapshot = [];
+    const newSnapshot = [];
+    let pendingRequests = 0;
+    let requestError = null;
+    const requestCallback = Util.bind(function (error, featureCollection) {
       if (error) {
         requestError = error;
       }
 
       if (featureCollection) {
-        for (var i = featureCollection.features.length - 1; i >= 0; i--) {
+        for (let i = featureCollection.features.length - 1; i >= 0; i--) {
           newSnapshot.push(featureCollection.features[i].id);
         }
       }
@@ -330,16 +331,16 @@ export var FeatureManager = FeatureGrid.extend({
       }
     }, this);
 
-    for (var i = this._currentSnapshot.length - 1; i >= 0; i--) {
+    for (let i = this._currentSnapshot.length - 1; i >= 0; i--) {
       oldSnapshot.push(this._currentSnapshot[i]);
     }
 
     this._cache = {};
 
-    for (var key in this._cells) {
+    for (const key in this._cells) {
       pendingRequests++;
-      var coords = this._keyToCellCoords(key);
-      var bounds = this._cellCoordsToBounds(coords);
+      const coords = this._keyToCellCoords(key);
+      const bounds = this._cellCoordsToBounds(coords);
       this._requestFeatures(bounds, coords, requestCallback);
     }
 
@@ -359,11 +360,11 @@ export var FeatureManager = FeatureGrid.extend({
   },
 
   setTimeRange: function (from, to, callback, context) {
-    var oldFrom = this.options.from;
-    var oldTo = this.options.to;
-    var pendingRequests = 0;
-    var requestError = null;
-    var requestCallback = Util.bind(function (error) {
+    const oldFrom = this.options.from;
+    const oldTo = this.options.to;
+    let pendingRequests = 0;
+    let requestError = null;
+    const requestCallback = Util.bind(function (error) {
       if (error) {
         requestError = error;
       }
@@ -382,10 +383,10 @@ export var FeatureManager = FeatureGrid.extend({
     this._filterExistingFeatures(oldFrom, oldTo, from, to);
 
     if (this.options.timeFilterMode === 'server') {
-      for (var key in this._cells) {
+      for (const key in this._cells) {
         pendingRequests++;
-        var coords = this._keyToCellCoords(key);
-        var bounds = this._cellCoordsToBounds(coords);
+        const coords = this._keyToCellCoords(key);
+        const bounds = this._cellCoordsToBounds(coords);
         this._requestFeatures(bounds, coords, requestCallback);
       }
     }
@@ -398,15 +399,15 @@ export var FeatureManager = FeatureGrid.extend({
   },
 
   _filterExistingFeatures: function (oldFrom, oldTo, newFrom, newTo) {
-    var layersToRemove =
+    const layersToRemove =
       oldFrom && oldTo
         ? this._getFeaturesInTimeRange(oldFrom, oldTo)
         : this._currentSnapshot;
-    var layersToAdd = this._getFeaturesInTimeRange(newFrom, newTo);
+    const layersToAdd = this._getFeaturesInTimeRange(newFrom, newTo);
 
     if (layersToAdd.indexOf) {
-      for (var i = 0; i < layersToAdd.length; i++) {
-        var shouldRemoveLayer = layersToRemove.indexOf(layersToAdd[i]);
+      for (let i = 0; i < layersToAdd.length; i++) {
+        const shouldRemoveLayer = layersToRemove.indexOf(layersToAdd[i]);
         if (shouldRemoveLayer >= 0) {
           layersToRemove.splice(shouldRemoveLayer, 1);
         }
@@ -423,12 +424,12 @@ export var FeatureManager = FeatureGrid.extend({
   },
 
   _getFeaturesInTimeRange: function (start, end) {
-    var ids = [];
-    var search;
+    const ids = [];
+    let search;
 
     if (this.options.timeField.start && this.options.timeField.end) {
-      var startTimes = this._startTimeIndex.between(start, end);
-      var endTimes = this._endTimeIndex.between(start, end);
+      const startTimes = this._startTimeIndex.between(start, end);
+      const endTimes = this._endTimeIndex.between(start, end);
       search = startTimes.concat(endTimes);
     } else if (this._timeIndex) {
       search = this._timeIndex.between(start, end);
@@ -439,7 +440,7 @@ export var FeatureManager = FeatureGrid.extend({
       return [];
     }
 
-    for (var i = search.length - 1; i >= 0; i--) {
+    for (let i = search.length - 1; i >= 0; i--) {
       ids.push(search[i].id);
     }
 
@@ -447,11 +448,11 @@ export var FeatureManager = FeatureGrid.extend({
   },
 
   _buildTimeIndexes: function (geojson) {
-    var i;
-    var feature;
+    let i;
+    let feature;
     if (this.options.timeField.start && this.options.timeField.end) {
-      var startTimeEntries = [];
-      var endTimeEntries = [];
+      const startTimeEntries = [];
+      const endTimeEntries = [];
       for (i = geojson.length - 1; i >= 0; i--) {
         feature = geojson[i];
         startTimeEntries.push({
@@ -466,7 +467,7 @@ export var FeatureManager = FeatureGrid.extend({
       this._startTimeIndex.bulkAdd(startTimeEntries);
       this._endTimeIndex.bulkAdd(endTimeEntries);
     } else {
-      var timeEntries = [];
+      const timeEntries = [];
       for (i = geojson.length - 1; i >= 0; i--) {
         feature = geojson[i];
         timeEntries.push({
@@ -484,17 +485,17 @@ export var FeatureManager = FeatureGrid.extend({
       return true;
     }
 
-    var from = +this.options.from.valueOf();
-    var to = +this.options.to.valueOf();
+    const from = +this.options.from.valueOf();
+    const to = +this.options.to.valueOf();
 
     if (typeof this.options.timeField === 'string') {
-      var date = +feature.properties[this.options.timeField];
+      const date = +feature.properties[this.options.timeField];
       return date >= from && date <= to;
     }
 
     if (this.options.timeField.start && this.options.timeField.end) {
-      var startDate = +feature.properties[this.options.timeField.start];
-      var endDate = +feature.properties[this.options.timeField.end];
+      const startDate = +feature.properties[this.options.timeField.start];
+      const endDate = +feature.properties[this.options.timeField.end];
       return (
         (startDate >= from && startDate <= to) ||
         (endDate >= from && endDate <= to) ||
@@ -508,7 +509,7 @@ export var FeatureManager = FeatureGrid.extend({
     if (!this._map) {
       return false;
     }
-    var zoom = this._map.getZoom();
+    const zoom = this._map.getZoom();
     if (zoom > this.options.maxZoom || zoom < this.options.minZoom) {
       return false;
     } else {
@@ -528,9 +529,9 @@ export var FeatureManager = FeatureGrid.extend({
         2. If this._cache[key] exists it will be an array of feature IDs.
         3. Call this.addLayers(this._cache[key]) to instruct the feature layer to add the layers back.
       */
-      for (var i in this._cells) {
-        var coords = this._cells[i].coords;
-        var key = this._cacheKey(coords);
+      for (const i in this._cells) {
+        const coords = this._cells[i].coords;
+        const key = this._cacheKey(coords);
         if (this._cache[key]) {
           this.addLayers(this._cache[key]);
         }
@@ -558,7 +559,7 @@ export var FeatureManager = FeatureGrid.extend({
 
   _getMetadata: function (callback) {
     if (this._metadata) {
-      var error;
+      let error;
       callback(error, this._metadata);
     } else {
       this.metadata(
@@ -584,13 +585,13 @@ export var FeatureManager = FeatureGrid.extend({
           return;
         }
         // GeoJSON featureCollection or simple feature
-        var featuresArray = features.features ? features.features : [features];
+        const featuresArray = features.features ? features.features : [features];
 
         this.service.addFeatures(
           features,
           Util.bind(function (error, response) {
             if (!error) {
-              for (var i = featuresArray.length - 1; i >= 0; i--) {
+              for (let i = featuresArray.length - 1; i >= 0; i--) {
                 // assign ID from result to appropriate objectid field from service metadata
                 featuresArray[i].properties[metadata.objectIdField] =
                   featuresArray.length > 1
@@ -620,12 +621,12 @@ export var FeatureManager = FeatureGrid.extend({
 
   updateFeatures: function (features, callback, context) {
     // GeoJSON featureCollection or simple feature
-    var featuresArray = features.features ? features.features : [features];
+    const featuresArray = features.features ? features.features : [features];
     this.service.updateFeatures(
       features,
       function (error, response) {
         if (!error) {
-          for (var i = featuresArray.length - 1; i >= 0; i--) {
+          for (let i = featuresArray.length - 1; i >= 0; i--) {
             this.removeLayers([featuresArray[i].id], true);
           }
           this._addFeatures(featuresArray);
@@ -647,9 +648,9 @@ export var FeatureManager = FeatureGrid.extend({
     return this.service.deleteFeatures(
       ids,
       function (error, response) {
-        var responseArray = response.length ? response : [response];
+        const responseArray = response.length ? response : [response];
         if (!error && responseArray.length > 0) {
-          for (var i = responseArray.length - 1; i >= 0; i--) {
+          for (let i = responseArray.length - 1; i >= 0; i--) {
             this.removeLayers([responseArray[i].objectId], true);
           }
         }

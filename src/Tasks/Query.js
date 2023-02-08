@@ -8,7 +8,7 @@ import {
   _setGeometry
 } from '../Util';
 
-export var Query = Task.extend({
+export const Query = Task.extend({
   setters: {
     offset: 'resultOffset',
     limit: 'resultRecordCount',
@@ -110,7 +110,7 @@ export var Query = Task.extend({
   },
 
   simplify: function (map, factor) {
-    var mapWidth = Math.abs(map.getBounds().getWest() - map.getBounds().getEast());
+    const mapWidth = Math.abs(map.getBounds().getWest() - map.getBounds().getEast());
     this.params.maxAllowableOffset = (mapWidth / map.getSize().y) * factor;
     return this;
   },
@@ -184,7 +184,7 @@ export var Query = Task.extend({
 
   // only valid for image services
   pixelSize: function (rawPoint) {
-    var castPoint = point(rawPoint);
+    const castPoint = point(rawPoint);
     this.params.pixelSize = [castPoint.x, castPoint.y];
     return this;
   },
@@ -211,7 +211,7 @@ export var Query = Task.extend({
 
   _setGeometryParams: function (geometry) {
     this.params.inSR = 4326;
-    var converted = _setGeometry(geometry);
+    const converted = _setGeometry(geometry);
     this.params.geometry = converted.geometry;
     this.params.geometryType = converted.geometryType;
   }

@@ -1,7 +1,7 @@
 import { Task } from './Task';
 import { responseToFeatureCollection } from '../Util';
 
-export var Find = Task.extend({
+export const Find = Task.extend({
   setters: {
     // method name > param name
     contains: 'contains',
@@ -39,7 +39,7 @@ export var Find = Task.extend({
   },
 
   simplify: function (map, factor) {
-    var mapWidth = Math.abs(map.getBounds().getWest() - map.getBounds().getEast());
+    const mapWidth = Math.abs(map.getBounds().getWest() - map.getBounds().getEast());
     this.params.maxAllowableOffset = (mapWidth / map.getSize().y) * factor;
     return this;
   },

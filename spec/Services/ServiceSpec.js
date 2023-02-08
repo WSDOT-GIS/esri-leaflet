@@ -1,9 +1,9 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 describe('L.esri.Service', function () {
-  var serviceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockService';
-  var service;
-  var server;
+  const serviceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockService';
+  let service;
+  let server;
 
   beforeEach(function () {
     server = sinon.fakeServer.create();
@@ -30,7 +30,7 @@ describe('L.esri.Service', function () {
   it('should make GET requests w/ JSONP', function (done) {
     service.options.useCors = false;
 
-    var request = service.get('route', {}, function (error, response) {
+    const request = service.get('route', {}, function (error, response) {
       expect(response).to.deep.equal({ foo: 'bar' });
       done();
     });
@@ -84,8 +84,7 @@ describe('L.esri.Service', function () {
   });
 
   it('should fire a requestend event', function (done) {
-    server.respondWith('GET', 'http://services.arcgis.com/mock/arcgis/rest/services/MockService/route?foo=bar&f=json', JSON.stringify({ foo: 'bar'
-    }));
+    server.respondWith('GET', 'http://services.arcgis.com/mock/arcgis/rest/services/MockService/route?foo=bar&f=json', JSON.stringify({ foo: 'bar' }));
 
     service.on('requestend', function (e) {
       expect(e.type).to.equal('requestend');
@@ -251,4 +250,4 @@ describe('L.esri.Service', function () {
     server.respond();
   });
 });
-/* eslint-enable handle-callback-err */
+/* eslint-enable node/handle-callback-err */

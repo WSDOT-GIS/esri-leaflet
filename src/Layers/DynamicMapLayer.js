@@ -3,7 +3,7 @@ import { RasterLayer } from './RasterLayer';
 import { getUrlParams } from '../Util';
 import mapService from '../Services/MapService';
 
-export var DynamicMapLayer = RasterLayer.extend({
+export const DynamicMapLayer = RasterLayer.extend({
 
   options: {
     updateInterval: 150,
@@ -76,14 +76,14 @@ export var DynamicMapLayer = RasterLayer.extend({
   },
 
   _getPopupData: function (e) {
-    var callback = Util.bind(function (error, featureCollection, response) {
+    const callback = Util.bind(function (error, featureCollection, response) {
       if (error) { return; } // we really can't do anything here but authenticate or requesterror will fire
       setTimeout(Util.bind(function () {
         this._renderPopup(e.latlng, error, featureCollection, response);
       }, this), 300);
     }, this);
 
-    var identifyRequest;
+    let identifyRequest;
     if (this.options.popup) {
       identifyRequest = this.options.popup.on(this._map).at(e.latlng);
     } else {
@@ -105,7 +105,7 @@ export var DynamicMapLayer = RasterLayer.extend({
 
     // if present, pass layer ids and sql filters through to the identify task
     if (this.options.layerDefs && typeof this.options.layerDefs !== 'string' && !identifyRequest.params.layerDefs) {
-      for (var id in this.options.layerDefs) {
+      for (const id in this.options.layerDefs) {
         if (Object.prototype.hasOwnProperty.call(this.options.layerDefs, id)) {
           identifyRequest.layerDef(id, this.options.layerDefs[id]);
         }
@@ -120,9 +120,9 @@ export var DynamicMapLayer = RasterLayer.extend({
   },
 
   _buildExportParams: function () {
-    var sr = parseInt(this._map.options.crs.code.split(':')[1], 10);
+    const sr = parseInt(this._map.options.crs.code.split(':')[1], 10);
 
-    var params = {
+    const params = {
       bbox: this._calculateBbox(),
       size: this._calculateImageSize(),
       dpi: 96,
@@ -191,7 +191,7 @@ export var DynamicMapLayer = RasterLayer.extend({
       }, this);
     } else {
       params.f = 'image';
-      var fullUrl = this.options.url + 'export' + Util.getParamString(params);
+      let fullUrl = this.options.url + 'export' + Util.getParamString(params);
       if (this.options.proxy) {
         fullUrl = this.options.proxy + '?' + fullUrl;
       }

@@ -2,7 +2,7 @@ import { Path, Util, GeoJSON, latLng } from 'leaflet';
 import { FeatureManager } from './FeatureManager';
 import { warn } from '../../Util';
 
-export var FeatureLayer = FeatureManager.extend({
+export const FeatureLayer = FeatureManager.extend({
   options: {
     cacheLayers: true
   },
@@ -24,7 +24,7 @@ export var FeatureLayer = FeatureManager.extend({
    */
 
   onRemove: function (map) {
-    for (var i in this._layers) {
+    for (const i in this._layers) {
       map.removeLayer(this._layers[i]);
       // trigger the event when the entire featureLayer is removed from the map
       this.fire(
@@ -41,7 +41,7 @@ export var FeatureLayer = FeatureManager.extend({
   },
 
   createNewLayer: function (geojson) {
-    var layer = GeoJSON.geometryToLayer(geojson, this.options);
+    const layer = GeoJSON.geometryToLayer(geojson, this.options);
     // trap for GeoJSON without geometry
     if (layer) {
       layer.defaultOptions = layer.options;
@@ -52,8 +52,8 @@ export var FeatureLayer = FeatureManager.extend({
   _updateLayer: function (layer, geojson) {
     // convert the geojson coordinates into a Leaflet LatLng array/nested arrays
     // pass it to setLatLngs to update layer geometries
-    var latlngs = [];
-    var coordsToLatLng = this.options.coordsToLatLng || GeoJSON.coordsToLatLng;
+    let latlngs = [];
+    const coordsToLatLng = this.options.coordsToLatLng || GeoJSON.coordsToLatLng;
 
     // copy new attributes, if present
     if (geojson.properties) {
@@ -108,11 +108,11 @@ export var FeatureLayer = FeatureManager.extend({
    */
 
   createLayers: function (features) {
-    for (var i = features.length - 1; i >= 0; i--) {
-      var geojson = features[i];
+    for (let i = features.length - 1; i >= 0; i--) {
+      const geojson = features[i];
 
-      var layer = this._layers[geojson.id];
-      var newLayer;
+      const layer = this._layers[geojson.id];
+      let newLayer;
 
       if (
         this._visibleZoom() &&
@@ -178,8 +178,8 @@ export var FeatureLayer = FeatureManager.extend({
   },
 
   addLayers: function (ids) {
-    for (var i = ids.length - 1; i >= 0; i--) {
-      var layer = this._layers[ids[i]];
+    for (let i = ids.length - 1; i >= 0; i--) {
+      const layer = this._layers[ids[i]];
       if (
         layer &&
         (!this.options.timeField || this._featureWithinTimeRange(layer.feature))
@@ -197,9 +197,9 @@ export var FeatureLayer = FeatureManager.extend({
   },
 
   removeLayers: function (ids, permanent) {
-    for (var i = ids.length - 1; i >= 0; i--) {
-      var id = ids[i];
-      var layer = this._layers[id];
+    for (let i = ids.length - 1; i >= 0; i--) {
+      const id = ids[i];
+      const layer = this._layers[id];
       if (layer) {
         this.fire(
           'removefeature',
@@ -221,9 +221,9 @@ export var FeatureLayer = FeatureManager.extend({
     if (this._visibleZoom() && !this._zooming && this._map) {
       Util.requestAnimFrame(
         Util.bind(function () {
-          var cacheKey = this._cacheKey(coords);
-          var cellKey = this._cellCoordsToKey(coords);
-          var layers = this._cache[cacheKey];
+          const cacheKey = this._cacheKey(coords);
+          const cellKey = this._cellCoordsToKey(coords);
+          const layers = this._cache[cacheKey];
           if (this._activeCells[cellKey] && layers) {
             this.addLayers(layers);
           }
@@ -237,15 +237,15 @@ export var FeatureLayer = FeatureManager.extend({
       Util.requestAnimFrame(
         Util.bind(function () {
           if (this._map) {
-            var cacheKey = this._cacheKey(coords);
-            var cellKey = this._cellCoordsToKey(coords);
-            var layers = this._cache[cacheKey];
-            var mapBounds = this._map.getBounds();
+            const cacheKey = this._cacheKey(coords);
+            const cellKey = this._cellCoordsToKey(coords);
+            const layers = this._cache[cacheKey];
+            const mapBounds = this._map.getBounds();
             if (!this._activeCells[cellKey] && layers) {
-              var removable = true;
+              let removable = true;
 
-              for (var i = 0; i < layers.length; i++) {
-                var layer = this._layers[layers[i]];
+              for (let i = 0; i < layers.length; i++) {
+                const layer = this._layers[layers[i]];
                 if (
                   layer &&
                   layer.getBounds &&
@@ -292,8 +292,8 @@ export var FeatureLayer = FeatureManager.extend({
   },
 
   resetFeatureStyle: function (id) {
-    var layer = this._layers[id];
-    var style = this._originalStyle || Path.prototype.options;
+    const layer = this._layers[id];
+    const style = this._originalStyle || Path.prototype.options;
     if (layer) {
       Util.extend(layer.options, layer.defaultOptions);
       this.setFeatureStyle(id, style);
@@ -302,7 +302,7 @@ export var FeatureLayer = FeatureManager.extend({
   },
 
   setFeatureStyle: function (id, style) {
-    var layer = this._layers[id];
+    const layer = this._layers[id];
     if (typeof style === 'function') {
       style = style(layer.feature);
     }
@@ -319,8 +319,8 @@ export var FeatureLayer = FeatureManager.extend({
   eachActiveFeature: function (fn, context) {
     // figure out (roughly) which layers are in view
     if (this._map) {
-      var activeBounds = this._map.getBounds();
-      for (var i in this._layers) {
+      const activeBounds = this._map.getBounds();
+      for (const i in this._layers) {
         if (this._currentSnapshot.indexOf(this._layers[i].feature.id) !== -1) {
           // a simple point in poly test for point geometries
           if (
@@ -342,7 +342,7 @@ export var FeatureLayer = FeatureManager.extend({
   },
 
   eachFeature: function (fn, context) {
-    for (var i in this._layers) {
+    for (const i in this._layers) {
       fn.call(context, this._layers[i]);
     }
     return this;
@@ -376,32 +376,32 @@ export var FeatureLayer = FeatureManager.extend({
   },
 
   _redraw: function (id) {
-    var layer = this._layers[id];
-    var geojson = layer.feature;
+    const layer = this._layers[id];
+    const geojson = layer.feature;
 
     // if this looks like a marker
     if (layer && layer.setIcon && this.options.pointToLayer) {
       // update custom symbology, if necessary
       if (this.options.pointToLayer) {
-        var getIcon = this.options.pointToLayer(
+        const getIcon = this.options.pointToLayer(
           geojson,
           latLng(
             geojson.geometry.coordinates[1],
             geojson.geometry.coordinates[0]
           )
         );
-        var updatedIcon = getIcon.options.icon;
+        const updatedIcon = getIcon.options.icon;
         layer.setIcon(updatedIcon);
       }
     }
 
     // looks like a vector marker (circleMarker)
     if (layer && layer.setStyle && this.options.pointToLayer) {
-      var getStyle = this.options.pointToLayer(
+      const getStyle = this.options.pointToLayer(
         geojson,
         latLng(geojson.geometry.coordinates[1], geojson.geometry.coordinates[0])
       );
-      var updatedStyle = getStyle.options;
+      const updatedStyle = getStyle.options;
       this.setFeatureStyle(geojson.id, updatedStyle);
     }
 

@@ -2,7 +2,7 @@ import { ImageOverlay, CRS, DomUtil, Util, Layer, popup, latLng, bounds } from '
 import { cors } from '../Support';
 import { setEsriAttribution, removeEsriAttribution } from '../Util';
 
-var Overlay = ImageOverlay.extend({
+const Overlay = ImageOverlay.extend({
   onAdd: function (map) {
     this._topLeft = map.getPixelBounds().min;
     ImageOverlay.prototype.onAdd.call(this, map);
@@ -16,7 +16,7 @@ var Overlay = ImageOverlay.extend({
   }
 });
 
-export var RasterLayer = Layer.extend({
+export const RasterLayer = Layer.extend({
   options: {
     opacity: 1,
     position: 'front',
@@ -132,9 +132,9 @@ export var RasterLayer = Layer.extend({
     if (!this._currentImage) {
       return;
     }
-    var layers = this._currentImage.getPane().children;
-    var edgeZIndex = -compare(-Infinity, Infinity); // -Infinity for max, Infinity for min
-    for (var i = 0, len = layers.length, zIndex; i < len; i++) {
+    const layers = this._currentImage.getPane().children;
+    let edgeZIndex = -compare(-Infinity, Infinity); // -Infinity for max, Infinity for min
+    for (let i = 0, len = layers.length, zIndex; i < len; i++) {
       zIndex = layers[i].style.zIndex;
       if (layers[i] !== this._currentImage._image && zIndex) {
         edgeZIndex = compare(edgeZIndex, +zIndex);
@@ -201,7 +201,7 @@ export var RasterLayer = Layer.extend({
       // create a new image overlay and add it to the map
       // to start loading the image
       // opacity is 0 while the image is loading
-      var image = new Overlay(url, bounds, {
+      const image = new Overlay(url, bounds, {
         opacity: 0,
         crossOrigin: this.options.withCredentials ? 'use-credentials' : this.options.useCors,
         alt: this.options.alt,
@@ -209,17 +209,17 @@ export var RasterLayer = Layer.extend({
         interactive: this.options.interactive
       }).addTo(this._map);
 
-      var onOverlayError = function () {
+      const onOverlayError = function () {
         this._map.removeLayer(image);
         this.fire('error');
         image.off('load', onOverlayLoad, this);
       };
 
-      var onOverlayLoad = function (e) {
+      const onOverlayLoad = function (e) {
         image.off('error', onOverlayError, this);
         if (this._map) {
-          var newImage = e.target;
-          var oldImage = this._currentImage;
+          const newImage = e.target;
+          const oldImage = this._currentImage;
 
           // if the bounds of this image matches the bounds that
           // _renderImage was called with and we have a map with the same bounds
@@ -274,8 +274,8 @@ export var RasterLayer = Layer.extend({
       return;
     }
 
-    var zoom = this._map.getZoom();
-    var bounds = this._map.getBounds();
+    const zoom = this._map.getZoom();
+    const bounds = this._map.getBounds();
 
     if (this._animatingZoom) {
       return;
@@ -293,7 +293,7 @@ export var RasterLayer = Layer.extend({
       return;
     }
 
-    var params = this._buildExportParams();
+    const params = this._buildExportParams();
     Util.extend(params, this.options.requestParams);
 
     if (params) {
@@ -312,7 +312,7 @@ export var RasterLayer = Layer.extend({
     latlng = latLng(latlng);
     if (this._shouldRenderPopup && this._lastClick.equals(latlng)) {
       // add the popup to the map where the mouse was clicked at
-      var content = this._popupFunction(error, results, response);
+      const content = this._popupFunction(error, results, response);
       if (content) {
         this._popup.setLatLng(latlng).setContent(content).openOn(this._map);
       }
@@ -325,30 +325,30 @@ export var RasterLayer = Layer.extend({
   },
 
   _calculateBbox: function () {
-    var pixelBounds = this._map.getPixelBounds();
+    const pixelBounds = this._map.getPixelBounds();
 
-    var sw = this._map.unproject(pixelBounds.getBottomLeft());
-    var ne = this._map.unproject(pixelBounds.getTopRight());
+    const sw = this._map.unproject(pixelBounds.getBottomLeft());
+    const ne = this._map.unproject(pixelBounds.getTopRight());
 
-    var neProjected = this._map.options.crs.project(ne);
-    var swProjected = this._map.options.crs.project(sw);
+    const neProjected = this._map.options.crs.project(ne);
+    const swProjected = this._map.options.crs.project(sw);
 
     // this ensures ne/sw are switched in polar maps where north/top bottom/south is inverted
-    var boundsProjected = bounds(neProjected, swProjected);
+    const boundsProjected = bounds(neProjected, swProjected);
 
     return [boundsProjected.getBottomLeft().x, boundsProjected.getBottomLeft().y, boundsProjected.getTopRight().x, boundsProjected.getTopRight().y].join(',');
   },
 
   _calculateImageSize: function () {
     // ensure that we don't ask ArcGIS Server for a taller image than we have actual map displaying within the div
-    var bounds = this._map.getPixelBounds();
-    var size = this._map.getSize();
+    const bounds = this._map.getPixelBounds();
+    const size = this._map.getSize();
 
-    var sw = this._map.unproject(bounds.getBottomLeft());
-    var ne = this._map.unproject(bounds.getTopRight());
+    const sw = this._map.unproject(bounds.getBottomLeft());
+    const ne = this._map.unproject(bounds.getTopRight());
 
-    var top = this._map.latLngToLayerPoint(ne).y;
-    var bottom = this._map.latLngToLayerPoint(sw).y;
+    const top = this._map.latLngToLayerPoint(ne).y;
+    const bottom = this._map.latLngToLayerPoint(sw).y;
 
     if (top > 0 || bottom < size.y) {
       size.y = bottom - top;

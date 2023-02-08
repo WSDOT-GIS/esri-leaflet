@@ -1,9 +1,9 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 describe('L.esri.TiledMapLayer', function () {
   function createMap () {
     // create container
-    var container = document.createElement('div');
+    const container = document.createElement('div');
 
     // give container a width/height
     container.setAttribute('style', 'width:500px; height: 500px;');
@@ -14,13 +14,13 @@ describe('L.esri.TiledMapLayer', function () {
     return L.map(container).setView([37.75, -122.45], 12);
   }
 
-  var url = 'http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer';
-  var urlWithParams = 'http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer?foo=bar';
-  var subdomainsUrl = 'http://{s}.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer';
-  var subdomainsArray = ['server', 'services'];
-  var layer;
-  var server;
-  var map;
+  const url = 'http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer';
+  const urlWithParams = 'http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer?foo=bar';
+  const subdomainsUrl = 'http://{s}.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer';
+  const subdomainsArray = ['server', 'services'];
+  let layer;
+  let server;
+  let map;
 
   beforeEach(function () {
     server = sinon.fakeServer.create();
@@ -39,7 +39,7 @@ describe('L.esri.TiledMapLayer', function () {
   });
 
   it('will modify url for old tiles.arcgisonline.com services', function () {
-    var layer = L.esri.tiledMapLayer({
+    const layer = L.esri.tiledMapLayer({
       url: 'http://tiles.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer'
     });
     expect(layer.tileUrl).to.equal('http://tiles{s}.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}');
@@ -47,7 +47,7 @@ describe('L.esri.TiledMapLayer', function () {
   });
 
   it('will modify url for new tiles.arcgis.com services', function () {
-    var layer = L.esri.tiledMapLayer({
+    const layer = L.esri.tiledMapLayer({
       url: 'http://tiles.arcgis.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer'
     });
     expect(layer.tileUrl).to.equal('http://tiles{s}.arcgis.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}');
@@ -55,7 +55,7 @@ describe('L.esri.TiledMapLayer', function () {
   });
 
   it('will modify url for service with subdomains', function () {
-    var layer = L.esri.tiledMapLayer({
+    const layer = L.esri.tiledMapLayer({
       url: subdomainsUrl,
       subdomains: subdomainsArray
     });
@@ -64,14 +64,14 @@ describe('L.esri.TiledMapLayer', function () {
   });
 
   it('should expose the authenticate method on the underlying service', function () {
-    var spy = sinon.spy(layer.service, 'authenticate');
+    const spy = sinon.spy(layer.service, 'authenticate');
     layer.authenticate('foo');
     expect(spy).to.have.been.calledWith('foo');
   });
 
   it('should expose the query method on the underlying service', function () {
-    // var spy = sinon.spy(layer.service, 'identify');
-    var identify = layer.identify();
+    // let spy = sinon.spy(layer.service, 'identify');
+    const identify = layer.identify();
     expect(identify).to.be.an.instanceof(L.esri.IdentifyFeatures);
     expect(identify._service).to.equal(layer.service);
   });
@@ -81,8 +81,8 @@ describe('L.esri.TiledMapLayer', function () {
       currentVersion: 10.2
     }));
 
-    var requeststartSpy = sinon.spy();
-    var requestendSpy = sinon.spy();
+    const requeststartSpy = sinon.spy();
+    const requestendSpy = sinon.spy();
 
     layer.on('requeststart', requeststartSpy);
     layer.on('requestend', requestendSpy);
@@ -210,4 +210,4 @@ describe('L.esri.TiledMapLayer', function () {
     expect(map.attributionControl._container.innerHTML).to.contain('foo');
   });
 });
-/* eslint-enable handle-callback-err */
+/* eslint-enable node/handle-callback-err */

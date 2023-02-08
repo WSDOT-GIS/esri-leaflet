@@ -60,11 +60,11 @@
       /*
     make a copy of this file in the same folder if you'd like git to ignore your local changes
     */
-      var map = L.map("map").setView([43.5, -98.5], 6);
+      let map = L.map("map").setView([43.5, -98.5], 6);
 
       L.esri.basemapLayer("Topographic").addTo(map);
 
-      var fl = L.esri
+      let fl = L.esri
         .featureLayer({
           url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/flash_flood_warnings_2002_2012/FeatureServer/0",
         })

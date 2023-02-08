@@ -1,8 +1,8 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 describe('L.esri request helpers', function () {
-  var xhr;
-  var requests = [];
+  let xhr;
+  let requests = [];
 
   beforeEach(function () {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -17,7 +17,7 @@ describe('L.esri request helpers', function () {
     requests = [];
   });
 
-  var sampleResponse = {
+  const sampleResponse = {
     currentVersion: 10.2,
     fullVersion: '10.2.0',
     soapUrl: 'http://services.arcgisonline.com/arcgis/services',
@@ -27,7 +27,7 @@ describe('L.esri request helpers', function () {
     }
   };
 
-  var sampleError = {
+  const sampleError = {
     error: {
       code: 500,
       message: 'Error'
@@ -67,7 +67,7 @@ describe('L.esri request helpers', function () {
   });
 
   it('should be able to make a GET request with JSONP', function (done) {
-    var request = L.esri.get.JSONP('http://example.com/foo', {}, function (error, response) {
+    const request = L.esri.get.JSONP('http://example.com/foo', {}, function (error, response) {
       expect(this.foo).to.equal('bar');
       expect(response).to.deep.equal(sampleResponse);
       done();
@@ -79,7 +79,7 @@ describe('L.esri request helpers', function () {
   });
 
   it('should callback with an error on non-JSON reponses', function (done) {
-    var request = L.esri.get.JSONP('http://example.com/foo', {}, function (error) {
+    const request = L.esri.get.JSONP('http://example.com/foo', {}, function (error) {
       expect(error).to.deep.equal({
         error: {
           code: 500,
@@ -93,7 +93,7 @@ describe('L.esri request helpers', function () {
   });
 
   it('should callback with an error when an error is recived from the server', function (done) {
-    var request = L.esri.get.JSONP('http://example.com/foo', {}, function (error) {
+    const request = L.esri.get.JSONP('http://example.com/foo', {}, function (error) {
       expect(error).to.deep.equal(sampleError);
       done();
     });
@@ -164,8 +164,8 @@ describe('L.esri request helpers', function () {
   });
 
   it('should serialize Dates as seconds', function (done) {
-    var now = new Date();
-    var stamp = now.valueOf();
+    const now = new Date();
+    const stamp = now.valueOf();
 
     L.esri.get.CORS('http://services.arcgisonline.com/ArcGIS/rest/info', {
       time: now
@@ -194,7 +194,7 @@ describe('L.esri request helpers', function () {
   });
 
   it('should callback with an error when an XMLHttpRequest error is encountered', function (done) {
-    var request = L.esri.post('http://services.arcgisonline.com/ArcGIS/rest/info', {}, function (error, response) {
+    const request = L.esri.post('http://services.arcgisonline.com/ArcGIS/rest/info', {}, function (error, response) {
       expect(error).to.deep.equal({
         error: {
           message: 'XMLHttpRequest error',
@@ -215,4 +215,4 @@ describe('L.esri request helpers', function () {
     expect(L.esri.post).to.be.a('function');
   });
 });
-/* eslint-enable handle-callback-err */
+/* eslint-enable node/handle-callback-err */

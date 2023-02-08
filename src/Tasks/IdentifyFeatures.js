@@ -1,11 +1,12 @@
 import { latLng } from 'leaflet';
 import { Identify } from './Identify';
-import { responseToFeatureCollection,
+import {
+  responseToFeatureCollection,
   boundsToExtent,
   _setGeometry
 } from '../Util';
 
-export var IdentifyFeatures = Identify.extend({
+export const IdentifyFeatures = Identify.extend({
   setters: {
     layers: 'layers',
     precision: 'geometryPrecision',
@@ -23,8 +24,8 @@ export var IdentifyFeatures = Identify.extend({
   },
 
   on: function (map) {
-    var extent = boundsToExtent(map.getBounds());
-    var size = map.getSize();
+    const extent = boundsToExtent(map.getBounds());
+    const size = map.getSize();
     this.params.imageDisplay = [size.x, size.y, 96];
     this.params.mapExtent = [extent.xmin, extent.ymin, extent.xmax, extent.ymax];
     return this;
@@ -46,7 +47,7 @@ export var IdentifyFeatures = Identify.extend({
   },
 
   simplify: function (map, factor) {
-    var mapWidth = Math.abs(map.getBounds().getWest() - map.getBounds().getEast());
+    const mapWidth = Math.abs(map.getBounds().getWest() - map.getBounds().getEast());
     this.params.maxAllowableOffset = (mapWidth / map.getSize().y) * factor;
     return this;
   },
@@ -59,10 +60,10 @@ export var IdentifyFeatures = Identify.extend({
 
       // ok no error lets just assume we have features...
       } else {
-        var featureCollection = responseToFeatureCollection(response);
+        const featureCollection = responseToFeatureCollection(response);
         response.results = response.results.reverse();
-        for (var i = 0; i < featureCollection.features.length; i++) {
-          var feature = featureCollection.features[i];
+        for (let i = 0; i < featureCollection.features.length; i++) {
+          const feature = featureCollection.features[i];
           feature.layerId = response.results[i].layerId;
         }
         callback.call(context, undefined, featureCollection, response);
@@ -71,7 +72,7 @@ export var IdentifyFeatures = Identify.extend({
   },
 
   _setGeometryParams: function (geometry) {
-    var converted = _setGeometry(geometry);
+    const converted = _setGeometry(geometry);
     this.params.geometry = converted.geometry;
     this.params.geometryType = converted.geometryType;
   }

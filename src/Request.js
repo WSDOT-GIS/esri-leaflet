@@ -1,18 +1,18 @@
 import { Util, DomUtil } from 'leaflet';
 import { Support } from './Support';
 
-var callbacks = 0;
+let callbacks = 0;
 
 function serialize (params) {
-  var data = '';
+  let data = '';
 
   params.f = params.f || 'json';
 
-  for (var key in params) {
+  for (const key in params) {
     if (Object.prototype.hasOwnProperty.call(params, key)) {
-      var param = params[key];
-      var type = Object.prototype.toString.call(param);
-      var value;
+      const param = params[key];
+      const type = Object.prototype.toString.call(param);
+      let value;
 
       if (data.length) {
         data += '&';
@@ -36,7 +36,7 @@ function serialize (params) {
 }
 
 function createRequest (callback, context) {
-  var httpRequest = new window.XMLHttpRequest();
+  const httpRequest = new window.XMLHttpRequest();
 
   httpRequest.onerror = function (e) {
     httpRequest.onreadystatechange = Util.falseFn;
@@ -50,8 +50,8 @@ function createRequest (callback, context) {
   };
 
   httpRequest.onreadystatechange = function () {
-    var response;
-    var error;
+    let response;
+    let error;
 
     if (httpRequest.readyState === 4) {
       try {
@@ -83,7 +83,7 @@ function createRequest (callback, context) {
 }
 
 function xmlHttpPost (url, params, callback, context) {
-  var httpRequest = createRequest(callback, context);
+  const httpRequest = createRequest(callback, context);
   httpRequest.open('POST', url);
 
   if (typeof context !== 'undefined' && context !== null) {
@@ -98,7 +98,7 @@ function xmlHttpPost (url, params, callback, context) {
 }
 
 function xmlHttpGet (url, params, callback, context) {
-  var httpRequest = createRequest(callback, context);
+  const httpRequest = createRequest(callback, context);
   httpRequest.open('GET', url + '?' + serialize(params), true);
 
   if (typeof context !== 'undefined' && context !== null) {
@@ -116,9 +116,9 @@ function xmlHttpGet (url, params, callback, context) {
 
 // AJAX handlers for CORS (modern browsers) or JSONP (older browsers)
 export function request (url, params, callback, context) {
-  var paramString = serialize(params);
-  var httpRequest = createRequest(callback, context);
-  var requestLength = (url + '?' + paramString).length;
+  const paramString = serialize(params);
+  const httpRequest = createRequest(callback, context);
+  const requestLength = (url + '?' + paramString).length;
 
   // ie10/11 require the request be opened before a timeout is applied
   if (requestLength <= 2000 && Support.cors) {
@@ -160,13 +160,13 @@ export function request (url, params, callback, context) {
 
 export function jsonp (url, params, callback, context) {
   window._EsriLeafletCallbacks = window._EsriLeafletCallbacks || {};
-  var callbackId = 'c' + callbacks;
+  const callbackId = 'c' + callbacks;
   params.callback = 'window._EsriLeafletCallbacks.' + callbackId;
 
   window._EsriLeafletCallbacks[callbackId] = function (response) {
     if (window._EsriLeafletCallbacks[callbackId] !== true) {
-      var error;
-      var responseType = Object.prototype.toString.call(response);
+      let error;
+      const responseType = Object.prototype.toString.call(response);
 
       if (!(responseType === '[object Object]' || responseType === '[object Array]')) {
         error = {
@@ -188,14 +188,14 @@ export function jsonp (url, params, callback, context) {
     }
   };
 
-  var script = DomUtil.create('script', null, document.body);
+  const script = DomUtil.create('script', null, document.body);
   script.type = 'text/javascript';
   script.src = url + '?' + serialize(params);
   script.id = callbackId;
   script.onerror = function (error) {
     if (error && window._EsriLeafletCallbacks[callbackId] !== true) {
       // Can't get true error code: it can be 404, or 401, or 500
-      var err = {
+      const err = {
         error: {
           code: 500,
           message: 'An unknown error occurred'
@@ -222,7 +222,7 @@ export function jsonp (url, params, callback, context) {
   };
 }
 
-var get = ((Support.cors) ? xmlHttpGet : jsonp);
+const get = ((Support.cors) ? xmlHttpGet : jsonp);
 get.CORS = xmlHttpGet;
 get.JSONP = jsonp;
 
@@ -239,7 +239,7 @@ export { get };
 export { xmlHttpPost as post };
 
 // export the Request object to call the different handlers for debugging
-export var Request = {
+export const Request = {
   request: request,
   get: get,
   post: xmlHttpPost

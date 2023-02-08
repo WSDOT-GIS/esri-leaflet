@@ -1,10 +1,10 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 /* eslint-disable no-unused-expressions */
 describe('L.esri.FeatureManager', function () {
   function createMap () {
     // create container
-    var container = document.createElement('div');
+    const container = document.createElement('div');
 
     // give container a width/height
     container.setAttribute('style', 'width:500px; height: 500px;');
@@ -19,18 +19,18 @@ describe('L.esri.FeatureManager', function () {
     }).setView([45.51, -122.66], 14);
   }
 
-  var url =
+  const url =
     'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0';
-  var urlWithParams =
+  const urlWithParams =
     'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0?foo=bar';
-  var layer;
-  var sandbox;
-  var server;
-  var MockLayer;
-  var map;
-  var oldRaf;
-  var requests;
-  var xhr;
+  let layer;
+  let sandbox;
+  let server;
+  let MockLayer;
+  let map;
+  let oldRaf;
+  let requests;
+  let xhr;
 
   beforeEach(function () {
     xhr = sinon.useFakeXMLHttpRequest(); // eslint-disable-line no-native-reassign
@@ -72,7 +72,7 @@ describe('L.esri.FeatureManager', function () {
     L.Util.requestAnimFrame = oldRaf;
   });
 
-  var fields = [
+  const fields = [
     {
       name: 'OBJECTID',
       type: 'esriFieldTypeOID',
@@ -108,7 +108,7 @@ describe('L.esri.FeatureManager', function () {
     }
   ];
 
-  var feature1 = {
+  const feature1 = {
     attributes: {
       OBJECTID: 1,
       Name: 'Site 1',
@@ -124,7 +124,7 @@ describe('L.esri.FeatureManager', function () {
     }
   };
 
-  var feature2 = {
+  const feature2 = {
     attributes: {
       OBJECTID: 2,
       Name: 'Site 2',
@@ -140,7 +140,7 @@ describe('L.esri.FeatureManager', function () {
     }
   };
 
-  var feature3 = {
+  const feature3 = {
     attributes: {
       OBJECTID: 3,
       Name: 'Site 3',
@@ -156,7 +156,7 @@ describe('L.esri.FeatureManager', function () {
     }
   };
 
-  var feature4 = {
+  const feature4 = {
     attributes: {
       OBJECTID: 4,
       Name: 'Site 4',
@@ -173,7 +173,7 @@ describe('L.esri.FeatureManager', function () {
     }
   };
 
-  var feature5 = {
+  const feature5 = {
     attributes: {
       OBJECTID: 5,
       Name: 'Site 5',
@@ -190,7 +190,7 @@ describe('L.esri.FeatureManager', function () {
     }
   };
 
-  var feature6 = {
+  const feature6 = {
     attributes: {
       OBJECTID: 6,
       Name: 'Site 6',
@@ -215,7 +215,7 @@ describe('L.esri.FeatureManager', function () {
   };
 
   // geojson:
-  var feature7 = {
+  const feature7 = {
     type: 'Feature',
     geometry:
     {
@@ -237,7 +237,7 @@ describe('L.esri.FeatureManager', function () {
     properties: null
   };
 
-  var feature8 = {
+  const feature8 = {
     type: 'Feature',
     geometry:
     {
@@ -421,9 +421,9 @@ describe('L.esri.FeatureManager', function () {
   });
 
   it('should warn if you call setTimeRange but have not set a TimeField', function () {
-    var consoleWarnSpy = sinon.spy(console, 'warn');
+    const consoleWarnSpy = sinon.spy(console, 'warn');
 
-    var basiclayer = new MockLayer({
+    const basiclayer = new MockLayer({
       url: url
     });
 
@@ -619,7 +619,7 @@ describe('L.esri.FeatureManager', function () {
       })
     );
 
-    var callback = sinon.spy();
+    const callback = sinon.spy();
 
     layer.setTimeRange(
       new Date('January 13 2014 GMT-0800'),
@@ -693,7 +693,7 @@ describe('L.esri.FeatureManager', function () {
       }
     ]);
 
-    var callback = sinon.spy();
+    const callback = sinon.spy();
 
     layer.setWhere("Type='Inactive'", callback);
 
@@ -761,7 +761,7 @@ describe('L.esri.FeatureManager', function () {
   });
 
   it('should return true for features with a single feature with start and end time fields in the current time range', function () {
-    var layer = new L.esri.FeatureManager({
+    const layer = new L.esri.FeatureManager({
       url: url,
       from: new Date('Dec 1 2013 GMT-0800'),
       to: new Date('January 12 2014 GMT-0800'),
@@ -868,21 +868,21 @@ describe('L.esri.FeatureManager', function () {
   });
 
   it('should expose the authenticate method on the underlying service', function () {
-    var spy = sinon.spy(layer.service, 'authenticate');
+    const spy = sinon.spy(layer.service, 'authenticate');
     layer.authenticate('foo');
     expect(spy).to.have.been.calledWith('foo');
   });
 
   it('should expose the metadata method on the underlying service', function () {
-    var spy = sinon.spy(layer.service, 'metadata');
-    var callback = sinon.spy();
+    const spy = sinon.spy(layer.service, 'metadata');
+    const callback = sinon.spy();
     layer.metadata(callback);
     expect(spy).to.have.been.calledWith(callback);
   });
 
   it('should expose the query method on the underlying service', function () {
-    // var spy = sinon.spy(layer.service, 'query');
-    var query = layer.query();
+    // let spy = sinon.spy(layer.service, 'query');
+    const query = layer.query();
     expect(query).to.be.an.instanceof(L.esri.Query);
     expect(query._service).to.equal(layer.service);
   });
@@ -1089,7 +1089,7 @@ describe('L.esri.FeatureManager', function () {
       })
     );
 
-    var layer = new MockLayer({
+    const layer = new MockLayer({
       url:
         'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0/',
       simplifyFactor: 0.5
@@ -1128,7 +1128,7 @@ describe('L.esri.FeatureManager', function () {
   it('should propagate events from the service', function () {
     server.respondWith(
       'GET',
-      new RegExp(/.*/),
+      /.*/,
       JSON.stringify({
         fields: fields,
         features: [],
@@ -1137,8 +1137,8 @@ describe('L.esri.FeatureManager', function () {
       })
     );
 
-    var requeststartSpy = sinon.spy();
-    var requestendSpy = sinon.spy();
+    const requeststartSpy = sinon.spy();
+    const requestendSpy = sinon.spy();
 
     layer.on('requeststart', requeststartSpy);
     layer.on('requestend', requestendSpy);
@@ -1193,7 +1193,7 @@ describe('L.esri.FeatureManager', function () {
 
   //     expect(layer._visibleZoom()).to.be.true;
 
-  //     // var requestSpy = sinon.spy();
+  //     // let requestSpy = sinon.spy();
   //     // layer.on('addfeature', requestSpy);
   //     // expect(requestSpy.callCount).to.be.above(0);
   //     done();
@@ -1203,20 +1203,20 @@ describe('L.esri.FeatureManager', function () {
   // });
 
   it('should keep an accurate count of active requests even when they error', function () {
-    var triggered = false;
+    let triggered = false;
 
     layer.on('load', function (ev) {
       triggered = true;
     });
 
-    var southWest = L.latLng(29.53522956294847, -98.4375);
-    var northEast = L.latLng(30.14512718337613, -97.734375);
-    var bounds = L.latLngBounds(southWest, northEast);
-    var point = L.point(200, 300);
+    const southWest = L.latLng(29.53522956294847, -98.4375);
+    const northEast = L.latLng(30.14512718337613, -97.734375);
+    const bounds = L.latLngBounds(southWest, northEast);
+    const point = L.point(200, 300);
 
     server.respondWith(
       'GET',
-      new RegExp(/.*/),
+      /.*/,
       JSON.stringify({
         fields: fields
       })
@@ -1228,7 +1228,7 @@ describe('L.esri.FeatureManager', function () {
 
     server.respondWith(
       'GET',
-      new RegExp(/.*/),
+      /.*/,
       JSON.stringify({
         fields: fields
       })
@@ -1240,7 +1240,7 @@ describe('L.esri.FeatureManager', function () {
 
     expect(layer._activeRequests).to.equal(2);
 
-    server.respondWith('GET', new RegExp(/.*/), [
+    server.respondWith('GET', /.*/, [
       500,
       { 'Content-Type': 'application/json' },
       ''
@@ -1263,10 +1263,11 @@ describe('L.esri.FeatureManager', function () {
       'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&inSR=4326&geometry=%7B%22xmin%22%3A-122.6513671875%2C%22ymin%22%3A45.49094569262732%2C%22xmax%22%3A-122.607421875%2C%22ymax%22%3A45.521743896993634%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&geometryPrecision=6&resultOffset=0&resultType=tile&f=geojson',
       JSON.stringify({
         type: 'FeatureCollection',
-        features: [feature7] })
+        features: [feature7]
+      })
     );
 
-    var layer = new MockLayer({
+    const layer = new MockLayer({
       url:
         'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0/',
       fetchAllFeatures: true,
@@ -1290,7 +1291,7 @@ describe('L.esri.FeatureManager', function () {
       })
     );
 
-    var layer = new MockLayer({
+    const layer = new MockLayer({
       url:
         'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0/',
       fetchAllFeatures: true
@@ -1365,7 +1366,7 @@ describe('L.esri.FeatureManager', function () {
       })
     );
 
-    var layer = new MockLayer({
+    const layer = new MockLayer({
       url:
         'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0/',
       fetchAllFeatures: true,
@@ -1402,7 +1403,7 @@ describe('L.esri.FeatureManager', function () {
       })
     );
 
-    var layer = new MockLayer({
+    const layer = new MockLayer({
       url:
         'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0/',
       fetchAllFeatures: true,
@@ -1438,7 +1439,7 @@ describe('L.esri.FeatureManager', function () {
       })
     );
 
-    var layer = new MockLayer({
+    const layer = new MockLayer({
       url:
         'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0/'
     });
@@ -1501,4 +1502,4 @@ describe('L.esri.FeatureManager', function () {
     ]);
   });
 });
-/* eslint-enable handle-callback-err */
+/* eslint-enable node/handle-callback-err */

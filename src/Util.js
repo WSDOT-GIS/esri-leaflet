@@ -8,8 +8,8 @@ import {
   arcgisToGeoJSON as a2g
 } from '@terraformer/arcgis';
 
-var BASE_LEAFLET_ATTRIBUTION_STRING = '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>';
-var POWERED_BY_ESRI_ATTRIBUTION_STRING = 'Powered by <a href="https://www.esri.com">Esri</a>';
+const BASE_LEAFLET_ATTRIBUTION_STRING = '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>';
+const POWERED_BY_ESRI_ATTRIBUTION_STRING = 'Powered by <a href="https://www.esri.com">Esri</a>';
 
 export function geojsonToArcGIS (geojson, idAttr) {
   return g2a(geojson, idAttr);
@@ -23,8 +23,8 @@ export function arcgisToGeoJSON (arcgis, idAttr) {
 export function extentToBounds (extent) {
   // "NaN" coordinates from ArcGIS Server indicate a null geometry
   if (extent.xmin !== 'NaN' && extent.ymin !== 'NaN' && extent.xmax !== 'NaN' && extent.ymax !== 'NaN') {
-    var sw = latLng(extent.ymin, extent.xmin);
-    var ne = latLng(extent.ymax, extent.xmax);
+    const sw = latLng(extent.ymin, extent.xmin);
+    const ne = latLng(extent.ymax, extent.xmax);
     return latLngBounds(sw, ne);
   } else {
     return null;
@@ -45,18 +45,18 @@ export function boundsToExtent (bounds) {
   };
 }
 
-var knownFieldNames = /^(OBJECTID|FID|OID|ID)$/i;
+const knownFieldNames = /^(OBJECTID|FID|OID|ID)$/i;
 
 // Attempts to find the ID Field from response
 export function _findIdAttributeFromResponse (response) {
-  var result;
+  let result;
 
   if (response.objectIdFieldName) {
     // Find Id Field directly
     result = response.objectIdFieldName;
   } else if (response.fields) {
     // Find ID Field based on field type
-    for (var j = 0; j <= response.fields.length - 1; j++) {
+    for (let j = 0; j <= response.fields.length - 1; j++) {
       if (response.fields[j].type === 'esriFieldTypeOID') {
         result = response.fields[j].name;
         break;
@@ -64,7 +64,7 @@ export function _findIdAttributeFromResponse (response) {
     }
     if (!result) {
       // If no field was marked as being the esriFieldTypeOID try well known field names
-      for (j = 0; j <= response.fields.length - 1; j++) {
+      for (let j = 0; j <= response.fields.length - 1; j++) {
         if (response.fields[j].name.match(knownFieldNames)) {
           result = response.fields[j].name;
           break;
@@ -77,7 +77,7 @@ export function _findIdAttributeFromResponse (response) {
 
 // This is the 'last' resort, find the Id field from the specified feature
 export function _findIdAttributeFromFeature (feature) {
-  for (var key in feature.attributes) {
+  for (const key in feature.attributes) {
     if (key.match(knownFieldNames)) {
       return key;
     }
@@ -85,9 +85,9 @@ export function _findIdAttributeFromFeature (feature) {
 }
 
 export function responseToFeatureCollection (response, idAttribute) {
-  var objectIdField;
-  var features = response.features || response.results;
-  var count = features && features.length;
+  let objectIdField;
+  const features = response.features || response.results;
+  const count = features && features.length;
 
   if (idAttribute) {
     objectIdField = idAttribute;
@@ -95,14 +95,14 @@ export function responseToFeatureCollection (response, idAttribute) {
     objectIdField = _findIdAttributeFromResponse(response);
   }
 
-  var featureCollection = {
+  const featureCollection = {
     type: 'FeatureCollection',
     features: []
   };
 
   if (count) {
-    for (var i = features.length - 1; i >= 0; i--) {
-      var feature = arcgisToGeoJSON(features[i], objectIdField || _findIdAttributeFromFeature(features[i]));
+    for (let i = features.length - 1; i >= 0; i--) {
+      const feature = arcgisToGeoJSON(features[i], objectIdField || _findIdAttributeFromFeature(features[i]));
       featureCollection.features.push(feature);
     }
   }
@@ -128,7 +128,7 @@ export function cleanUrl (url) {
 export function getUrlParams (options) {
   if (options.url.indexOf('?') !== -1) {
     options.requestParams = options.requestParams || {};
-    var queryString = options.url.substring(options.url.indexOf('?') + 1);
+    const queryString = options.url.substring(options.url.indexOf('?') + 1);
     options.url = options.url.split('?')[0];
     options.requestParams = JSON.parse('{"' + decodeURI(queryString).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
   }
@@ -143,7 +143,7 @@ export function isArcgisOnline (url) {
 }
 
 export function geojsonTypeToArcGIS (geoJsonType) {
-  var arcgisGeometryType;
+  let arcgisGeometryType;
   switch (geoJsonType) {
     case 'Point':
       arcgisGeometryType = 'esriGeometryPoint';
@@ -185,7 +185,7 @@ export function setEsriAttribution (map) {
   if (map.attributionControl._esriAttributionLayerCount === 0) {
     // Dynamically creating the CSS rules, only run this once per page load:
     if (!map.attributionControl._esriAttributionAddedOnce) {
-      var hoverAttributionStyle = document.createElement('style');
+      const hoverAttributionStyle = document.createElement('style');
       hoverAttributionStyle.type = 'text/css';
       hoverAttributionStyle.innerHTML = '.esri-truncated-attribution:hover {' +
         'white-space: normal;' +
@@ -193,7 +193,7 @@ export function setEsriAttribution (map) {
       document.getElementsByTagName('head')[0].appendChild(hoverAttributionStyle);
 
       // define a new css class in JS to trim attribution into a single line
-      var attributionStyle = document.createElement('style');
+      const attributionStyle = document.createElement('style');
       attributionStyle.type = 'text/css';
       attributionStyle.innerHTML = '.esri-truncated-attribution {' +
         'vertical-align: -3px;' +
@@ -241,7 +241,7 @@ export function removeEsriAttribution (map) {
 }
 
 export function _setGeometry (geometry) {
-  var params = {
+  const params = {
     geometry: null,
     geometryType: null
   };
@@ -302,13 +302,13 @@ export function _getAttributionData (url, map) {
     request(url, {}, Util.bind(function (error, attributions) {
       if (error) { return; }
       map._esriAttributions = [];
-      for (var c = 0; c < attributions.contributors.length; c++) {
-        var contributor = attributions.contributors[c];
+      for (let c = 0; c < attributions.contributors.length; c++) {
+        const contributor = attributions.contributors[c];
 
-        for (var i = 0; i < contributor.coverageAreas.length; i++) {
-          var coverageArea = contributor.coverageAreas[i];
-          var southWest = latLng(coverageArea.bbox[0], coverageArea.bbox[1]);
-          var northEast = latLng(coverageArea.bbox[2], coverageArea.bbox[3]);
+        for (let i = 0; i < contributor.coverageAreas.length; i++) {
+          const coverageArea = contributor.coverageAreas[i];
+          const southWest = latLng(coverageArea.bbox[0], coverageArea.bbox[1]);
+          const northEast = latLng(coverageArea.bbox[2], coverageArea.bbox[3]);
           map._esriAttributions.push({
             attribution: contributor.attribution,
             score: coverageArea.score,
@@ -324,32 +324,32 @@ export function _getAttributionData (url, map) {
       });
 
       // pass the same argument as the map's 'moveend' event
-      var obj = { target: map };
+      const obj = { target: map };
       _updateMapAttribution(obj);
     }, this));
   }
 }
 
 export function _updateMapAttribution (evt) {
-  var map = evt.target;
-  var oldAttributions = map._esriAttributions;
+  const map = evt.target;
+  const oldAttributions = map._esriAttributions;
 
   if (!map || !map.attributionControl) return;
 
-  var attributionElement = map.attributionControl._container.querySelector('.esri-dynamic-attribution');
+  const attributionElement = map.attributionControl._container.querySelector('.esri-dynamic-attribution');
 
   if (attributionElement && oldAttributions) {
-    var newAttributions = '';
-    var bounds = map.getBounds();
-    var wrappedBounds = latLngBounds(
+    let newAttributions = '';
+    const bounds = map.getBounds();
+    const wrappedBounds = latLngBounds(
       bounds.getSouthWest().wrap(),
       bounds.getNorthEast().wrap()
     );
-    var zoom = map.getZoom();
+    const zoom = map.getZoom();
 
-    for (var i = 0; i < oldAttributions.length; i++) {
-      var attribution = oldAttributions[i];
-      var text = attribution.attribution;
+    for (let i = 0; i < oldAttributions.length; i++) {
+      const attribution = oldAttributions[i];
+      const text = attribution.attribution;
 
       if (!newAttributions.match(text) && attribution.bounds.intersects(wrappedBounds) && zoom >= attribution.minZoom && zoom <= attribution.maxZoom) {
         newAttributions += (', ' + text);
@@ -369,7 +369,7 @@ export function _updateMapAttribution (evt) {
 // for backwards compatibility
 export { warn };
 
-export var EsriUtil = {
+export const EsriUtil = {
   warn: warn,
   cleanUrl: cleanUrl,
   getUrlParams: getUrlParams,

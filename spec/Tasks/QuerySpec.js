@@ -1,9 +1,9 @@
 /* eslint-env mocha */
-/* eslint-disable handle-callback-err */
+/* eslint-disable node/handle-callback-err */
 describe('L.esri.Query', function () {
   function createMap () {
     // create container
-    var container = document.createElement('div');
+    const container = document.createElement('div');
 
     // give container a width/height
     container.setAttribute('style', 'width:500px; height: 500px;');
@@ -14,22 +14,22 @@ describe('L.esri.Query', function () {
     return L.map(container).setView([45.51, -122.66], 16);
   }
 
-  var map = createMap();
+  const map = createMap();
 
-  var server;
-  var task;
+  let server;
+  let task;
 
-  var bounds = L.latLngBounds([[45.5, -122.66], [45.51, -122.65]]);
-  var latlng = L.latLng(45.51, -122.66);
+  const bounds = L.latLngBounds([[45.5, -122.66], [45.51, -122.65]]);
+  const latlng = L.latLng(45.51, -122.66);
 
-  var rawGeoJsonPolygon = {
+  const rawGeoJsonPolygon = {
     type: 'Polygon',
     coordinates: [[
       [-97, 39], [-97, 41], [-94, 41], [-94, 39], [-97, 39]
     ]]
   };
 
-  var rawGeoJsonMultiPolygon = {
+  const rawGeoJsonMultiPolygon = {
     type: 'MultiPolygon',
     coordinates: [
       [[[-97, 39], [-97, 41], [-94, 41], [-94, 39], [-97, 39]]],
@@ -37,16 +37,16 @@ describe('L.esri.Query', function () {
     ]
   };
 
-  var rawGeoJsonFeature = { type: 'Feature' };
+  const rawGeoJsonFeature = { type: 'Feature' };
   rawGeoJsonFeature.geometry = rawGeoJsonPolygon;
 
-  var geoJsonPolygon = L.geoJSON(rawGeoJsonPolygon);
+  const geoJsonPolygon = L.geoJSON(rawGeoJsonPolygon);
 
-  var featureLayerUrl = 'http://gis.example.com/mock/arcgis/rest/services/MockFeatureService/FeatureServer/0/';
-  var mapServiceUrl = 'http://gis.example.com/mock/arcgis/rest/services/MockMapService/MapServer/';
-  var imageServiceUrl = 'http://gis.example.com/mock/arcgis/rest/services/MockImageService/ImageServer/';
+  const featureLayerUrl = 'http://gis.example.com/mock/arcgis/rest/services/MockFeatureService/FeatureServer/0/';
+  const mapServiceUrl = 'http://gis.example.com/mock/arcgis/rest/services/MockMapService/MapServer/';
+  const imageServiceUrl = 'http://gis.example.com/mock/arcgis/rest/services/MockImageService/ImageServer/';
 
-  var sampleImageServiceQueryResponse = {
+  const sampleImageServiceQueryResponse = {
     fieldAliases: {
       IMAGEID: 'IMAGEID',
       OWNER: 'OWNER'
@@ -81,7 +81,7 @@ describe('L.esri.Query', function () {
     ]
   };
 
-  var sampleImageServiceCollection = {
+  const sampleImageServiceCollection = {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
@@ -105,7 +105,7 @@ describe('L.esri.Query', function () {
     }]
   };
 
-  var sampleMapServiceQueryResponse = {
+  const sampleMapServiceQueryResponse = {
     fieldAliases: {
       ObjectID: 'ObjectID',
       Name: 'Name'
@@ -139,7 +139,7 @@ describe('L.esri.Query', function () {
     ]
   };
 
-  var sampleMapServiceCollection = {
+  const sampleMapServiceCollection = {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
@@ -155,7 +155,7 @@ describe('L.esri.Query', function () {
     }]
   };
 
-  var sampleQueryResponse = {
+  const sampleQueryResponse = {
     objectIdFieldName: 'FID',
     fields: [{
       name: 'stop_desc',
@@ -190,7 +190,7 @@ describe('L.esri.Query', function () {
     ]
   };
 
-  var sampleExtentResponse = {
+  const sampleExtentResponse = {
     extent: {
       xmin: -122.66,
       ymin: 45.5,
@@ -200,7 +200,7 @@ describe('L.esri.Query', function () {
   };
 
   // this is how ArcGIS Server returns a null extent (for now)
-  var sampleNaNExtentResponse = {
+  const sampleNaNExtentResponse = {
     extent: {
       xmin: 'NaN',
       ymin: 'NaN',
@@ -209,11 +209,11 @@ describe('L.esri.Query', function () {
     }
   };
 
-  var sampleCountResponse = {
+  const sampleCountResponse = {
     count: 1
   };
 
-  var sampleFeatureCollection = {
+  const sampleFeatureCollection = {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
@@ -229,7 +229,7 @@ describe('L.esri.Query', function () {
     }]
   };
 
-  var sampleDistinctFeatureCollection = {
+  const sampleDistinctFeatureCollection = {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
@@ -242,12 +242,12 @@ describe('L.esri.Query', function () {
     }]
   };
 
-  var sampleIdsResponse = {
+  const sampleIdsResponse = {
     objectIdFieldName: 'FID',
     objectIds: [1, 2]
   };
 
-  var sampleDistinctQueryResponse = {
+  const sampleDistinctQueryResponse = {
     objectIdFieldName: 'FID',
     fields: [{
       name: 'stop_desc',
@@ -276,7 +276,7 @@ describe('L.esri.Query', function () {
     ]
   };
 
-  var dumbLongQuery = 'this is a dumb way to make sure the request is more than 2000 characters' +
+  const dumbLongQuery = 'this is a dumb way to make sure the request is more than 2000 characters' +
       'this is a dumb way to make sure the request is more than 2000 characters' +
       'this is a dumb way to make sure the request is more than 2000 characters' +
       'this is a dumb way to make sure the request is more than 2000 characters' +
@@ -315,7 +315,7 @@ describe('L.esri.Query', function () {
   it('should query features', function (done) {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&f=json', JSON.stringify(sampleQueryResponse));
 
-    var request = task.run(function (error, featureCollection, raw) {
+    const request = task.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleQueryResponse);
       done();
@@ -330,7 +330,7 @@ describe('L.esri.Query', function () {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&returnM=false&f=json', JSON.stringify(sampleQueryResponse));
 
     task.returnM(false);
-    var request = task.run(function (error, featureCollection, raw) {
+    const request = task.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleQueryResponse);
       done();
@@ -609,8 +609,8 @@ describe('L.esri.Query', function () {
   it('should query features in a given time range', function (done) {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&time=1357027200000%2C1388563200000&f=json', JSON.stringify(sampleQueryResponse));
 
-    var start = new Date('January 1 2013 GMT-0800');
-    var end = new Date('January 1 2014 GMT-0800');
+    const start = new Date('January 1 2013 GMT-0800');
+    const end = new Date('January 1 2014 GMT-0800');
 
     task.between(start, end).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
@@ -732,7 +732,7 @@ describe('L.esri.Query', function () {
   it('should query bounds', function (done) {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&returnExtentOnly=true&f=json', JSON.stringify(sampleExtentResponse));
 
-    var request = task.bounds(function (error, latlngbounds, raw) {
+    const request = task.bounds(function (error, latlngbounds, raw) {
       expect(latlngbounds).to.deep.equal(bounds);
       expect(raw).to.deep.equal(sampleExtentResponse);
       done();
@@ -747,7 +747,7 @@ describe('L.esri.Query', function () {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D2&outSR=4326&outFields=*&returnExtentOnly=true&f=json', JSON.stringify(sampleNaNExtentResponse));
 
     task.where('1=2');
-    var request = task.bounds(function (error, latlngbounds, raw) {
+    const request = task.bounds(function (error, latlngbounds, raw) {
       expect(error.message).to.equal('Invalid Bounds');
       expect(latlngbounds).to.deep.equal(null);
       expect(raw).to.deep.equal(sampleNaNExtentResponse);
@@ -763,7 +763,7 @@ describe('L.esri.Query', function () {
   it('should query count', function (done) {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&returnCountOnly=true&f=json', JSON.stringify(sampleCountResponse));
 
-    var request = task.count(function (error, count, raw) {
+    const request = task.count(function (error, count, raw) {
       expect(count).to.equal(1);
       expect(raw).to.deep.equal(sampleCountResponse);
       done();
@@ -777,7 +777,7 @@ describe('L.esri.Query', function () {
   it('should query ids', function (done) {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&returnIdsOnly=true&f=json', JSON.stringify(sampleIdsResponse));
 
-    var request = task.ids(function (error, ids, raw) {
+    const request = task.ids(function (error, ids, raw) {
       expect(ids).to.deep.equal([1, 2]);
       expect(raw).to.deep.equal(sampleIdsResponse);
       done();
@@ -791,7 +791,7 @@ describe('L.esri.Query', function () {
   it('should query distinct', function (done) {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=false&where=1%3D1&outSR=4326&outFields=*&returnDistinctValues=true&f=json', JSON.stringify(sampleDistinctQueryResponse));
 
-    var request = task.distinct(true).run(function (error, featureCollection, raw) {
+    const request = task.distinct(true).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleDistinctFeatureCollection);
       expect(raw).to.deep.equal(sampleDistinctQueryResponse);
       done();
@@ -805,9 +805,9 @@ describe('L.esri.Query', function () {
   it('should use a feature layer service to query features', function (done) {
     server.respondWith('GET', featureLayerUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&f=json', JSON.stringify(sampleQueryResponse));
 
-    var service = new L.esri.FeatureLayerService({ url: featureLayerUrl });
+    const service = new L.esri.FeatureLayerService({ url: featureLayerUrl });
 
-    var request = service.query().run(function (error, featureCollection, raw) {
+    const request = service.query().run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleQueryResponse);
       done();
@@ -821,7 +821,7 @@ describe('L.esri.Query', function () {
   it('should use a map service to query features', function (done) {
     server.respondWith('GET', mapServiceUrl + '0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&f=json', JSON.stringify(sampleMapServiceQueryResponse));
 
-    var service = new L.esri.MapService({ url: mapServiceUrl });
+    const service = new L.esri.MapService({ url: mapServiceUrl });
 
     service.query().layer(0).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
@@ -835,7 +835,7 @@ describe('L.esri.Query', function () {
   it('should pass through a simple datum transformation when making a query', function (done) {
     server.respondWith('GET', mapServiceUrl + '0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&datumTransformation=1234&f=json', JSON.stringify(sampleMapServiceQueryResponse));
 
-    var service = new L.esri.MapService({ url: mapServiceUrl });
+    const service = new L.esri.MapService({ url: mapServiceUrl });
 
     service.query().layer(0).transform(1234).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
@@ -849,7 +849,7 @@ describe('L.esri.Query', function () {
   it('should pass through a JSON datum transformation when making a query', function (done) {
     server.respondWith('GET', mapServiceUrl + '0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&datumTransformation=%7B%22wkid%22%3A1234%7D&f=json', JSON.stringify(sampleMapServiceQueryResponse));
 
-    var service = new L.esri.MapService({ url: mapServiceUrl });
+    const service = new L.esri.MapService({ url: mapServiceUrl });
 
     service.query().layer(0).transform({ wkid: 1234 }).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
@@ -863,9 +863,9 @@ describe('L.esri.Query', function () {
   it('should use a image service to query features', function (done) {
     server.respondWith('GET', imageServiceUrl + 'query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&pixelSize=1%2C1&f=json', JSON.stringify(sampleImageServiceQueryResponse));
 
-    var service = new L.esri.MapService({ url: imageServiceUrl });
+    const service = new L.esri.MapService({ url: imageServiceUrl });
 
-    var request = service.query().pixelSize([1, 1]).run(function (error, featureCollection, raw) {
+    const request = service.query().pixelSize([1, 1]).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleImageServiceCollection);
       expect(raw).to.deep.equal(sampleImageServiceQueryResponse);
       done();
@@ -879,7 +879,7 @@ describe('L.esri.Query', function () {
   it('should make GET queries with no service', function (done) {
     server.respondWith('GET', mapServiceUrl + '0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&f=json', JSON.stringify(sampleMapServiceQueryResponse));
 
-    var queryTask = new L.esri.Query({ url: mapServiceUrl + '0' });
+    const queryTask = new L.esri.Query({ url: mapServiceUrl + '0' });
 
     queryTask.where('1=1').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
@@ -891,10 +891,10 @@ describe('L.esri.Query', function () {
   });
 
   it('query tasks without services should make GET requests w/ JSONP', function (done) {
-    var queryTask = new L.esri.Query({ url: mapServiceUrl + '0' });
+    const queryTask = new L.esri.Query({ url: mapServiceUrl + '0' });
     queryTask.options.useCors = false;
 
-    var request = queryTask.where('1=1').run(function (error, featureCollection, raw) {
+    const request = queryTask.where('1=1').run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
       expect(raw).to.deep.equal(sampleMapServiceQueryResponse);
       done();
@@ -905,7 +905,7 @@ describe('L.esri.Query', function () {
 
   it('query tasks without services should make POST requests', function (done) {
     server.respondWith('POST', mapServiceUrl + '0/query', JSON.stringify(sampleMapServiceQueryResponse));
-    var queryTask = new L.esri.Query({ url: mapServiceUrl + '0' });
+    const queryTask = new L.esri.Query({ url: mapServiceUrl + '0' });
     queryTask.where(dumbLongQuery).run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
       expect(raw).to.deep.equal(sampleMapServiceQueryResponse);
@@ -917,7 +917,7 @@ describe('L.esri.Query', function () {
 
   it('query tasks should pass through arbitrary parameters when POSTing too', function (done) {
     server.respondWith('POST', mapServiceUrl + '0/query', JSON.stringify(sampleMapServiceQueryResponse));
-    var queryTask = new L.esri.Query({
+    const queryTask = new L.esri.Query({
       url: mapServiceUrl + '0',
       requestParams: {
         foo: 'bar'
@@ -925,7 +925,7 @@ describe('L.esri.Query', function () {
     });
     queryTask.where(dumbLongQuery);
 
-    var request = queryTask.run(function (error, featureCollection, raw) {
+    const request = queryTask.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
       expect(raw).to.deep.equal(sampleMapServiceQueryResponse);
       done();
@@ -940,7 +940,7 @@ describe('L.esri.Query', function () {
 
     server.respondWith('GET', 'http://services.arcgis.com/mock/arcgis/rest/services/MockFeatureService/FeatureServer/0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&f=geojson', JSON.stringify(sampleFeatureCollection));
 
-    var request = task.run(function (error, featureCollection, raw) {
+    const request = task.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleFeatureCollection);
       done();
@@ -956,7 +956,7 @@ describe('L.esri.Query', function () {
 
     server.respondWith('GET', 'http://utility.arcgis.com/mock/arcgis/rest/services/MockFeatureService/FeatureServer/0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&f=json', JSON.stringify(sampleMapServiceQueryResponse));
 
-    var request = task.run(function (error, featureCollection, raw) {
+    const request = task.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleMapServiceCollection);
       expect(raw).to.deep.equal(sampleMapServiceQueryResponse);
       done();
@@ -977,7 +977,7 @@ describe('L.esri.Query', function () {
 
     server.respondWith('GET', 'http://services.arcgis.com/mock/arcgis/rest/services/MockFeatureService/FeatureServer/0/query?returnGeometry=true&where=1%3D1&outSR=4326&outFields=*&f=geojson&foo=bar', JSON.stringify(sampleFeatureCollection));
 
-    var request = task.run(function (error, featureCollection, raw) {
+    const request = task.run(function (error, featureCollection, raw) {
       expect(featureCollection).to.deep.equal(sampleFeatureCollection);
       expect(raw).to.deep.equal(sampleFeatureCollection);
       done();
@@ -988,4 +988,4 @@ describe('L.esri.Query', function () {
     server.respond();
   });
 });
-/* eslint-enable handle-callback-err */
+/* eslint-enable node/handle-callback-err */

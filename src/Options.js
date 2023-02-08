@@ -1,4 +1,4 @@
-export var options = {
+export const options = {
   attributionWidthOffset: 55
 };
 

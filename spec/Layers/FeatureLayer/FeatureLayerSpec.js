@@ -3,7 +3,7 @@
 describe('L.esri.FeatureLayer', function () {
   function createMap () {
     // create container
-    var container = document.createElement('div');
+    const container = document.createElement('div');
 
     // give container a width/height
     container.setAttribute('style', 'width:500px; height: 500px;');
@@ -18,9 +18,9 @@ describe('L.esri.FeatureLayer', function () {
     }).setView([45.51, -122.66], 5);
   }
 
-  var layer;
-  var map = createMap();
-  var features = [{
+  let layer;
+  const map = createMap();
+  const features = [{
     type: 'Feature',
     id: 1,
     geometry: {
@@ -44,7 +44,7 @@ describe('L.esri.FeatureLayer', function () {
     }
   }];
 
-  var multiPolygon = [({
+  const multiPolygon = [({
     type: 'Feature',
     id: 1,
     geometry: {
@@ -56,7 +56,7 @@ describe('L.esri.FeatureLayer', function () {
     }
   })];
 
-  var point = [({
+  const point = [({
     type: 'Feature',
     id: 1,
     geometry: {
@@ -102,7 +102,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should have an alias at L.esri.featureLayer', function () {
-    var layer = L.esri.featureLayer({
+    const layer = L.esri.featureLayer({
       url: 'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0'
     });
     expect(layer).to.be.an.instanceof(L.esri.FeatureLayer);
@@ -165,10 +165,10 @@ describe('L.esri.FeatureLayer', function () {
       }
     }).addTo(map);
 
-    var createSpy = sinon.spy();
+    const createSpy = sinon.spy();
     layer.on('createfeature', createSpy);
 
-    var removeSpy = sinon.spy();
+    const removeSpy = sinon.spy();
     layer.on('removefeature', removeSpy);
 
     layer.createLayers(features);
@@ -244,7 +244,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should iterate over each feature', function () {
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     layer.eachFeature(spy);
     expect(spy.callCount).to.equal(2);
   });
@@ -254,13 +254,13 @@ describe('L.esri.FeatureLayer', function () {
     layer._currentSnapshot.push(1);
     layer._currentSnapshot.push(2);
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     layer.eachActiveFeature(spy);
     expect(spy.callCount).to.equal(2);
   });
 
   it('should iterate over each active point feature', function () {
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     layer = L.esri.featureLayer({
       url: 'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0'
     }).addTo(map);
@@ -272,7 +272,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should run a function against every feature', function () {
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     layer = L.esri.featureLayer({
       url: 'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0',
       onEachFeature: spy
@@ -405,13 +405,13 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should iterate over each feature', function () {
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     layer.eachFeature(spy);
     expect(spy.callCount).to.equal(2);
   });
 
   it('should run a function against every feature', function () {
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     layer = L.esri.featureLayer({
       url: 'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0',
       onEachFeature: spy
@@ -469,7 +469,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should propagate events from individual features', function () {
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     layer.on('click', spy);
 
     layer.getFeature(1).fire('click', {
@@ -481,7 +481,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should pass renderer through to individual features', function () {
-    var renderer = L.canvas();
+    const renderer = L.canvas();
     layer = L.esri.featureLayer({
       url: 'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0',
       renderer: renderer
@@ -529,7 +529,7 @@ describe('L.esri.FeatureLayer', function () {
     layer.service.setTimeout(1500);
     expect(layer.service.options.timeout).to.equal(1500);
 
-    var layer2 = L.esri.featureLayer({
+    const layer2 = L.esri.featureLayer({
       url: 'http://gis.example.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0',
       pane: 'custom',
       timeout: 1500

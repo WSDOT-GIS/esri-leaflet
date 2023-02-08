@@ -1,9 +1,9 @@
 /* eslint-env mocha */
 describe('L.esri.FeatureLayer', function () {
-  var featureServiceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0';
-  var service;
-  var xhr;
-  var requests = [];
+  const featureServiceUrl = 'http://services.arcgis.com/mock/arcgis/rest/services/MockService/MockFeatureServer/0';
+  let service;
+  let xhr;
+  let requests = [];
 
   beforeEach(function () {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -21,7 +21,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should be able to add a feature to the layer', function () {
-    var callback = sinon.spy();
+    const callback = sinon.spy();
 
     service.addFeature({
       type: 'Feature',
@@ -41,7 +41,7 @@ describe('L.esri.FeatureLayer', function () {
       }]
     }));
 
-    var requestBody = window.decodeURIComponent(requests[0].requestBody);
+    const requestBody = window.decodeURIComponent(requests[0].requestBody);
 
     expect(requestBody).to.equal('features=[{"geometry":{"x":45,"y":-121,"spatialReference":{"wkid":4326}},"attributes":{"foo":"bar"}}]&f=json');
 
@@ -74,7 +74,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should be able to update a feature on the layer', function () {
-    var callback = sinon.spy();
+    const callback = sinon.spy();
 
     service.updateFeature({
       type: 'Feature',
@@ -95,7 +95,7 @@ describe('L.esri.FeatureLayer', function () {
       }]
     }));
 
-    var requestBody = window.decodeURIComponent(requests[0].requestBody);
+    const requestBody = window.decodeURIComponent(requests[0].requestBody);
 
     expect(requestBody).to.equal('features=[{"geometry":{"x":45,"y":-121,"spatialReference":{"wkid":4326}},"attributes":{"foo":"bar","OBJECTID":1}}]&f=json');
 
@@ -129,7 +129,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should be able to remove a feature from the layer', function () {
-    var callback = sinon.spy();
+    const callback = sinon.spy();
 
     service.deleteFeature(1, callback);
 
@@ -140,7 +140,7 @@ describe('L.esri.FeatureLayer', function () {
       }]
     }));
 
-    var requestBody = window.decodeURIComponent(requests[0].requestBody);
+    const requestBody = window.decodeURIComponent(requests[0].requestBody);
 
     expect(requestBody).to.equal('objectIds=1&f=json');
 
@@ -164,7 +164,7 @@ describe('L.esri.FeatureLayer', function () {
   });
 
   it('should be able to remove features from the layer', function () {
-    var callback = sinon.spy();
+    const callback = sinon.spy();
 
     service.deleteFeatures([1, 2], callback);
 
@@ -178,7 +178,7 @@ describe('L.esri.FeatureLayer', function () {
       }]
     }));
 
-    var requestBody = window.decodeURIComponent(requests[0].requestBody);
+    const requestBody = window.decodeURIComponent(requests[0].requestBody);
 
     expect(requestBody).to.equal('objectIds=1,2&f=json');
 

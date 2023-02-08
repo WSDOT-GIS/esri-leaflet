@@ -3,7 +3,7 @@ import { RasterLayer } from './RasterLayer';
 import { getUrlParams } from '../Util';
 import imageService from '../Services/ImageService';
 
-export var ImageMapLayer = RasterLayer.extend({
+export const ImageMapLayer = RasterLayer.extend({
 
   options: {
     updateInterval: 150,
@@ -92,14 +92,14 @@ export var ImageMapLayer = RasterLayer.extend({
   },
 
   _getPopupData: function (e) {
-    var callback = Util.bind(function (error, results, response) {
+    const callback = Util.bind(function (error, results, response) {
       if (error) { return; } // we really can't do anything here but authenticate or requesterror will fire
       setTimeout(Util.bind(function () {
         this._renderPopup(e.latlng, error, results, response);
       }, this), 300);
     }, this);
 
-    var identifyRequest = this.identify().at(e.latlng);
+    const identifyRequest = this.identify().at(e.latlng);
 
     // set mosaic rule for identify task if it is set for layer
     if (this.options.mosaicRule) {
@@ -121,9 +121,9 @@ export var ImageMapLayer = RasterLayer.extend({
   },
 
   _buildExportParams: function () {
-    var sr = parseInt(this._map.options.crs.code.split(':')[1], 10);
+    const sr = parseInt(this._map.options.crs.code.split(':')[1], 10);
 
-    var params = {
+    const params = {
       bbox: this._calculateBbox(),
       size: this._calculateImageSize(),
       format: this.options.format,
@@ -190,7 +190,7 @@ export var ImageMapLayer = RasterLayer.extend({
       }, this);
     } else {
       params.f = 'image';
-      var fullUrl = this.options.url + 'exportImage' + Util.getParamString(params);
+      let fullUrl = this.options.url + 'exportImage' + Util.getParamString(params);
       if (this.options.proxy) {
         fullUrl = this.options.proxy + '?' + fullUrl;
       }

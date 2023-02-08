@@ -7,9 +7,9 @@ import {
   _updateMapAttribution
 } from '../Util';
 
-var tileProtocol = (window.location.protocol !== 'https:') ? 'http:' : 'https:';
+const tileProtocol = (window.location.protocol !== 'https:') ? 'http:' : 'https:';
 
-export var BasemapLayer = TileLayer.extend({
+export const BasemapLayer = TileLayer.extend({
   statics: {
     TILES: {
       Streets: {
@@ -207,7 +207,7 @@ export var BasemapLayer = TileLayer.extend({
   },
 
   initialize: function (key, options) {
-    var config;
+    let config;
 
     // set the config variable with the appropriate config object
     if (typeof key === 'object' && key.urlTemplate && key.options) {
@@ -219,7 +219,7 @@ export var BasemapLayer = TileLayer.extend({
     }
 
     // merge passed options into the config options
-    var tileOptions = Util.extend(config.options, options);
+    const tileOptions = Util.extend(config.options, options);
 
     Util.setOptions(this, tileOptions);
 
@@ -266,15 +266,16 @@ export var BasemapLayer = TileLayer.extend({
 
   _initPane: function () {
     if (!this._map.getPane(this.options.pane)) {
-      var pane = this._map.createPane(this.options.pane);
+      const pane = this._map.createPane(this.options.pane);
       pane.style.pointerEvents = 'none';
       pane.style.zIndex = 500;
     }
   },
 
   getAttribution: function () {
+    let attribution;
     if (this.options.attribution) {
-      var attribution = '<span class="esri-dynamic-attribution">' + this.options.attribution + '</span>';
+      attribution = '<span class="esri-dynamic-attribution">' + this.options.attribution + '</span>';
     }
     return attribution;
   }

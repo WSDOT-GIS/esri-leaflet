@@ -537,7 +537,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Various release process optimizations.
 - Support for JSPM in package.json. Now you can `import featureLayer from 'esri-leaflet/src/Layers/FeatureLayer';` for more compact builds but be aware of [caveats](http://blog.izs.me/post/44149270867/why-no-directories-lib-in-node-the-less-snarky)
-- Support for browserify in the package.json. Now you can `var featureLayer = require('esri-leaflet/src/Layers/FeatureLayer');` for more compact builds but be aware of [caveats](http://blog.izs.me/post/44149270867/why-no-directories-lib-in-node-the-less-snarky)
+- Support for browserify in the package.json. Now you can `let featureLayer = require('esri-leaflet/src/Layers/FeatureLayer');` for more compact builds but be aware of [caveats](http://blog.izs.me/post/44149270867/why-no-directories-lib-in-node-the-less-snarky)
 
 ## [2.0.0-beta.3]
 
