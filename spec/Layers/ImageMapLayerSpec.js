@@ -176,7 +176,7 @@ describe('L.esri.ImageMapLayer', function () {
     clock.tick(301);
 
     expect(layer._popup.getContent()).to.equal('Pixel value: -17.5575');
-    expect(layer._popup.getLatLng()).to.equal(map.getCenter());
+    expect(layer._popup.getLatLng()).to.deep.equal(map.getCenter());
   });
 
   it('should bind a popup to the layer if the layer is already on a map', function () {
@@ -197,7 +197,7 @@ describe('L.esri.ImageMapLayer', function () {
     clock.tick(301);
 
     expect(layer._popup.getContent()).to.equal('Pixel value: -17.5575');
-    expect(layer._popup.getLatLng()).to.equal(map.getCenter());
+    expect(layer._popup.getLatLng()).to.deep.equal(map.getCenter());
   });
 
   it('should unbind a popup from the layer', function () {
@@ -247,7 +247,7 @@ describe('L.esri.ImageMapLayer', function () {
     clock.tick(301);
 
     expect(layer._popup.getContent()).to.equal('Pixel value: -17.5575');
-    expect(layer._popup.getLatLng()).to.equal(map.getCenter());
+    expect(layer._popup.getLatLng()).to.deep.equal(map.getCenter());
   });
 
   it('should propagate events from the service', function (done) {
