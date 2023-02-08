@@ -2,9 +2,7 @@ import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 
 const pkg = require('../package.json');
-const copyright = '/* ' + pkg.name + ' - v' + pkg.version + ' - ' + new Date().toString() + '\n' +
-                ' * Copyright (c) ' + new Date().getFullYear() + ' Environmental Systems Research Institute, Inc.\n' +
-                ' * ' + pkg.license + ' */';
+const copyright = `/* ${pkg.name} - v${pkg.version} - ${new Date().toString()}\n * Copyright (c) ${new Date().getFullYear()} Environmental Systems Research Institute, Inc.\n * ${pkg.license} */`;
 
 export default {
   input: 'src/EsriLeaflet.js',
