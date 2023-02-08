@@ -73,7 +73,7 @@
   "license": "Apache-2.0",
   "main": "dist/esri-leaflet-debug.js",
   "peerDependencies": {
-    "leaflet": "^1.0.0"
+    "leaflet": "^1.9.3"
   },
   "readmeFilename": "README.md",
   "repository": {
